@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- Created by Deltaion Lee (MCMi460) on Github -->
 <html>
   <head>
     <title>TAS-Online</title>
@@ -6,46 +7,124 @@
 
   <!-- Beginning of JS -->
   <script>
-  const keys = ["Frame","LStick","RStick","KEY_A","KEY_B"];
-  function loadColumns() {
-    for (var i = 0; i < keys.length; i++)  {
-      var tag = document.createElement("td");
-      tag.innerHTML = keys[i];
-      apparatus.appendChild(tag);
+  const keys = [
+    'NONE',
+    'KEY_A',
+    'KEY_B',
+    'KEY_X',
+    'KEY_Y',
+    'KEY_L',
+    'KEY_R',
+    'KEY_ZL',
+    'KEY_ZR',
+    'KEY_PLUS',
+    'KEY_MINUS',
+    'KEY_DLEFT',
+    'KEY_DUP',
+    'KEY_DRIGHT',
+    'KEY_DDOWN',
+    'KEY_LSTICK',
+    'KEY_RSTICK',
+  ];
+  var buffer = '1 KEY_A 0;0 0;0\n2 KEY_B 0;0 0;0';
+  function loadHeader() {
+    var columns = [];
+    columns.push(...keys);
+    columns.shift();
+    columns.unshift('Frame','L-Stick','R-Stick');
+    const header = apparatus.querySelector('#header');
+    for (var i = 0; i < columns.length; i++)  {
+      var td = document.createElement('td');
+      var text = columns[i];
+      if (i > 2) {
+        text = text.substring(4);
+      }
+      td.innerHTML = text; td.title = text;
+      header.appendChild(td);
     }
   }
 
   function populateTable() {
+    const lines = buffer.split('\n');
+    for (var i = 0; i < lines.length; i++) {
+      // Create row
+      line = lines[i].split(' ');
+      var row = document.createElement('tr');
+
+      // Frame
+      var frame = document.createElement('td'); frame.class = 'frame';
+      frame.innerHTML = line[0];
+      row.appendChild(frame);
+
+      // Sticks
+      var stick1 = line[2].split(';').map(Number); var stick2 = line[3].split(';').map(Number);
+      var lstick = document.createElement('td'); var rstick = document.createElement('td');
+      lstick.class = 'lstick'; rstick.class = 'rstick';
+      lstick.innerHTML = stick1; rstick.innerHTML = stick2;
+      row.appendChild(lstick); row.appendChild(rstick);
+
+      // Keys
+      var key = line[1].split(';');
+      for (var n = 0; n < key.length; n++) {
+        if (!keys.includes(key[n])) {
+          throw `Key at frame ${line[0]} [Input #${apparatus.children.length}] does not exist.`
+        }
+      }
+      for (var n = 1; n < keys.length; n++) {
+        var keyElem = document.createElement('td'); keyElem.class = 'key';
+        if (key.includes(keys[n])) {
+          keyElem.innerHTML = '✅';
+        } else {
+          keyElem.innerHTML = '⛔';
+        }
+        row.appendChild(keyElem);
+      }
+
+      apparatus.appendChild(row);
+    }
+  }
+
+  function sortTable() {
+
+  }
+
+  function tableUpdate(row, col) {
 
   }
 
   function setupUI() {
     // Create table columns
     const apparatus = document.getElementById('apparatus');
-    loadColumns();
-
     const main = document.getElementById('main');
+    try {
+    loadHeader();
+    populateTable();
+
     var sec = 0
 
     function cycle() {
       sec = (Number(sec) + .01).toFixed(2);
 
       if (sec == 2) {
-        main.innerHTML += "<h1>Based off of PyTAS!</h1>";
+        //main.innerHTML += '<h1>Based off of PyTAS!</h1>';
       }
     }
 
     setInterval(cycle,10);
+    } catch (e) {
+      console.log(e);
+      main.innerHTML += `<h3>${e}</h3>`;
+    }
   }
 
   </script>
   <!-- End of JS -->
 
   <!-- Beginning of HTML -->
-  <body onload="setupUI();">
+  <body onload='setupUI();'>
 
     <div
-      id = "header"
+      id = 'banner'
     >
 
       <h1><i>TAS-Online Editor</i></h1>
@@ -53,11 +132,11 @@
     </div>
 
     <div
-      id = "main"
+      id = 'main'
     >
 
-    <table id = "apparatus">
-      <tr>
+    <table id = 'apparatus'>
+      <tr id = 'header'>
 
       </tr>
     </table>
@@ -86,21 +165,26 @@
   }
 
   table, th, td {
+    font-size: 2vmin;
+    font-family: sans-serif;
+    overflow: hidden;
     table-layout: fixed;
     text-align: center;
     background-color: #2b2e38;
-    width: 90%;
-    height: 100%;
+    width: 99%;
+    min-height: 90%;
+    max-height: 100%;
     border-spacing: 5px;
     border: 2px solid;
-    border-top-color: rgb(220, 20, 60);
-    border-right-color: rgb(30, 144, 255);
-    border-bottom-color: rgb(220, 20, 60);
-    border-left-color: rgb(30, 144, 255);
+    border-top-color: #aa1bd1;
+    border-right-color: #1e90ff;
+    border-bottom-color: #aa1bd1;
+    border-left-color: #1e90ff;
     margin-top: 3vmin;
+    user-select: none;
   }
 
-  #header {
+  #banner {
     min-height: 10vh;
     display: flex;
     flex-direction: column;
@@ -110,7 +194,7 @@
     background-color: #18191c;
     border-radius: 3vmin;
   }
-  #header h1 {
+  #banner h1 {
     background: linear-gradient(90deg, rgba(255,0,0,1) 0%, rgba(79,176,85,1) 50%, rgba(51,0,255,1) 100%);
     background-clip: text;
     -webkit-text-fill-color: transparent;
