@@ -59,8 +59,10 @@
         let col = cell.cellIndex;
 
         if (row != 0 && cell.className == 'frame') {
-          let aNumber = Number(window.prompt('Type a number', ''));
-          console.log(aNumber);
+          let frame = Number(window.prompt('After which frame should this one be placed?', '1'));
+          if (frame) {
+
+          }
         } else if (row != 0 && cell.className == 'key') {
           if (apparatus.children[row].children[col].innerHTML == YES) {
             apparatus.children[row].children[col].innerHTML = NO;
@@ -97,6 +99,19 @@
       console.log(e);
       main.innerHTML += `<h3 style='color:#d11b24;'>${e}</h3>`;
     }
+  }
+
+  function downloadBuffer() {
+    let elem = document.createElement('a');
+    elem.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(buffer));
+    elem.setAttribute('download', 'script.txt');
+
+    elem.style.display = 'none';
+    document.body.appendChild(elem);
+
+    elem.click();
+
+    document.body.removeChild(elem);
   }
 
   function loadHeader() {
@@ -237,6 +252,7 @@
     >
 
     <input type = 'file' id = 'file-dialog' accept = 'text/plain' onchange = 'readFile(event);'>
+    <button onclick = 'downloadBuffer();'>Save progress</button>
 
     </div>
 
@@ -300,11 +316,19 @@
   }
 
   input {
-    font-size: 1.5vmin;
+    font-size: 2vmin;
     font-family: sans-serif;
     overflow: hidden;
     text-align: center;
-    margin-top: 2vmin;
+  }
+
+  button {
+    font-size: 2vmin;
+    font-family: sans-serif;
+    overflow: hidden;
+    text-align: center;
+    border: 2px solid #dc143c;
+    background-color: #2b2e38;
   }
 
   .header, .key {
@@ -330,10 +354,11 @@
   #main {
     max-height: 90vh;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
-    justify-content: center;
+    justify-content: space-evenly;
     font-size: calc(10px + 1vmin);
+    margin-top: 2vmin;
   }
 
   </style>
