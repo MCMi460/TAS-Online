@@ -34,6 +34,7 @@
     // Create table columns
     var apparatus = document.getElementById('apparatus');
     var main = document.getElementById('main');
+    document.getElementById('file-dialog').value = '';
     try {
     loadHeader();
     populateTable();
@@ -42,13 +43,9 @@
 
     function cycle() {
       sec = (Number(sec) + .01).toFixed(2);
-
-      if (sec == 2) {
-        //main.innerHTML += '<h1>Based off of PyTAS!</h1>';
-      }
     }
 
-    setInterval(cycle,10);
+    //setInterval(cycle,10);
 
     // Create listener for tableUpdate
     const updateEvent = document.querySelector('#apparatus');
@@ -61,7 +58,10 @@
         let row = cell.parentElement.rowIndex;
         let col = cell.cellIndex;
 
-        if (row != 0 && cell.className == 'key') {
+        if (row != 0 && cell.className == 'frame') {
+          let aNumber = Number(window.prompt('Type a number', ''));
+          console.log(aNumber);
+        } else if (row != 0 && cell.className == 'key') {
           if (apparatus.children[row].children[col].innerHTML == YES) {
             apparatus.children[row].children[col].innerHTML = NO;
           } else {
@@ -75,7 +75,24 @@
         main.innerHTML += `<h3 style='color:#d11b24;'>${e}</h3>`;
       }
     });
+    // End of listeners
 
+    } catch (e) {
+      console.log(e);
+      main.innerHTML += `<h3 style='color:#d11b24;'>${e}</h3>`;
+    }
+  }
+
+  function readFile(event) {
+    try {
+      var input = event.target;
+
+      var reader = new FileReader();
+      reader.onload = function() {
+        buffer = reader.result;
+        populateTable();
+      };
+      reader.readAsText(input.files[0]);
     } catch (e) {
       console.log(e);
       main.innerHTML += `<h3 style='color:#d11b24;'>${e}</h3>`;
@@ -144,6 +161,7 @@
 
       apparatus.appendChild(row);
     }
+    buffer = sortTable();
   }
 
   function sortTable() {
@@ -218,12 +236,18 @@
       id = 'main'
     >
 
-    <table id = 'apparatus'>
-      <tr id = 'header'>
+    <input type = 'file' id = 'file-dialog' accept = 'text/plain' onchange = 'readFile(event);'>
 
-      </tr>
-    </table>
+    </div>
 
+    <div
+      id = 'apparatus-container'
+    >
+      <table id = 'apparatus'>
+        <tr id = 'header'>
+
+        </tr>
+      </table>
     </div>
 
   </body>
@@ -247,6 +271,17 @@
     background-color: #242222;
   }
 
+  #apparatus-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: auto;
+    height: 90%;
+    margin-top: 2vmin;
+    margin-bottom: 3vmin;
+  }
+
   table, th, td {
     font-size: 2vmin;
     font-family: sans-serif;
@@ -254,16 +289,22 @@
     table-layout: fixed;
     text-align: center;
     background-color: #2b2e38;
-    width: 99%;
-    min-height: 90%;
-    max-height: 100%;
+    width: 98%;
+    max-height: 90%;
     border-spacing: 5px;
     border: 2px solid;
     border-top-color: #aa1bd1;
     border-right-color: #1e90ff;
     border-bottom-color: #aa1bd1;
     border-left-color: #1e90ff;
-    margin-top: 3vmin;
+  }
+
+  input {
+    font-size: 1.5vmin;
+    font-family: sans-serif;
+    overflow: hidden;
+    text-align: center;
+    margin-top: 2vmin;
   }
 
   .header, .key {
