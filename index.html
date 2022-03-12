@@ -27,75 +27,11 @@
     'KEY_RSTICK',
   ];
   var buffer = '1 KEY_A 0;0 0;0\n2 KEY_B 0;0 0;0';
-  function loadHeader() {
-    var columns = [];
-    columns.push(...keys);
-    columns.shift();
-    columns.unshift('Frame','L-Stick','R-Stick');
-    const header = apparatus.querySelector('#header');
-    for (var i = 0; i < columns.length; i++)  {
-      var td = document.createElement('td');
-      var text = columns[i];
-      if (i > 2) {
-        text = text.substring(4);
-      }
-      td.innerHTML = text; td.title = text;
-      header.appendChild(td);
-    }
-  }
-
-  function populateTable() {
-    const lines = buffer.split('\n');
-    for (var i = 0; i < lines.length; i++) {
-      // Create row
-      line = lines[i].split(' ');
-      var row = document.createElement('tr');
-
-      // Frame
-      var frame = document.createElement('td'); frame.class = 'frame';
-      frame.innerHTML = line[0];
-      row.appendChild(frame);
-
-      // Sticks
-      var stick1 = line[2].split(';').map(Number); var stick2 = line[3].split(';').map(Number);
-      var lstick = document.createElement('td'); var rstick = document.createElement('td');
-      lstick.class = 'lstick'; rstick.class = 'rstick';
-      lstick.innerHTML = stick1; rstick.innerHTML = stick2;
-      row.appendChild(lstick); row.appendChild(rstick);
-
-      // Keys
-      var key = line[1].split(';');
-      for (var n = 0; n < key.length; n++) {
-        if (!keys.includes(key[n])) {
-          throw `Key at frame ${line[0]} [Input #${apparatus.children.length}] does not exist.`
-        }
-      }
-      for (var n = 1; n < keys.length; n++) {
-        var keyElem = document.createElement('td'); keyElem.class = 'key';
-        if (key.includes(keys[n])) {
-          keyElem.innerHTML = '✅';
-        } else {
-          keyElem.innerHTML = '⛔';
-        }
-        row.appendChild(keyElem);
-      }
-
-      apparatus.appendChild(row);
-    }
-  }
-
-  function sortTable() {
-
-  }
-
-  function tableUpdate(row, col) {
-
-  }
 
   function setupUI() {
     // Create table columns
-    const apparatus = document.getElementById('apparatus');
-    const main = document.getElementById('main');
+    var apparatus = document.getElementById('apparatus');
+    var main = document.getElementById('main');
     try {
     loadHeader();
     populateTable();
@@ -111,10 +47,118 @@
     }
 
     setInterval(cycle,10);
+
+    // Create listener for tableUpdate
+    const updateEvent = document.querySelector('#apparatus');
+    updateEvent.addEventListener('click', function (e) {
+      try {
+        const cell = e.target.closest('td');
+        if (!cell) {
+          return;
+        }
+        const row = cell.parentElement;
+        tableUpdate(row.rowIndex, cell.cellIndex);
+      } catch (e) {
+        console.log(e);
+        main.innerHTML += `<h3 style='color:#d11b24;'>${e}</h3>`;
+      }
+    });
+
     } catch (e) {
       console.log(e);
-      main.innerHTML += `<h3>${e}</h3>`;
+      main.innerHTML += `<h3 style='color:#d11b24;'>${e}</h3>`;
     }
+  }
+
+  function loadHeader() {
+    let columns = [];
+    columns.push(...keys);
+    columns.shift();
+    columns.unshift('Frame','L-Stick','R-Stick');
+    const header = apparatus.querySelector('#header');
+    for (let i = 0; i < columns.length; i++)  {
+      let td = document.createElement('td');
+      let text = columns[i];
+      if (i > 2) {
+        text = text.substring(4);
+      }
+      td.innerHTML = text; td.title = text;
+      header.appendChild(td);
+    }
+  }
+
+  function populateTable() {
+    while (apparatus.children.length > 1) {
+      apparatus.removeChild(apparatus.lastChild);
+    }
+
+    const lines = buffer.split('\n');
+    for (let i = 0; i < lines.length; i++) {
+      // Create row
+      line = lines[i].split(' ');
+      if (!line || !/\S/.test(line)) {
+        continue;
+      }
+      let row = document.createElement('tr');
+
+      // Frame
+      let frame = document.createElement('td'); frame.class = 'frame';
+      frame.innerHTML = line[0];
+      row.appendChild(frame);
+
+      // Sticks
+      let stick1 = line[2].split(';').map(Number); let stick2 = line[3].split(';').map(Number);
+      let lstick = document.createElement('td'); let rstick = document.createElement('td');
+      lstick.class = 'lstick'; rstick.class = 'rstick';
+      lstick.innerHTML = stick1; rstick.innerHTML = stick2;
+      row.appendChild(lstick); row.appendChild(rstick);
+
+      // Keys
+      let key = line[1].split(';');
+      for (let n = 0; n < key.length; n++) {
+        if (!keys.includes(key[n])) {
+          throw `Key at frame ${line[0]} [Input #${apparatus.children.length}] does not exist.`
+        }
+      }
+      for (let n = 1; n < keys.length; n++) {
+        let keyElem = document.createElement('td'); keyElem.class = 'key';
+        if (key.includes(keys[n])) {
+          keyElem.innerHTML = '✅';
+        } else {
+          keyElem.innerHTML = '⛔';
+        }
+        row.appendChild(keyElem);
+      }
+
+      apparatus.appendChild(row);
+    }
+  }
+
+  function sortTable() {
+    return '';
+  }
+
+  function removeRow(row) {
+
+  }
+
+  function changeStick(row, col) {
+
+  }
+
+  // Events
+
+  function tableUpdate(row, col) {
+    if (col == keys.length + 2 && row != 0) {
+      removeRow(row);
+    } else if (3 > col > 0 && row != 0) {
+      changeStick(row, col);
+    }
+
+    // Sort table, then write the changes
+    buffer = sortTable();
+    // Fill table
+    populateTable();
   }
 
   </script>
