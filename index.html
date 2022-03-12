@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>TAS-Online</title>
+  </head>
+
+  <!-- Beginning of JS -->
+  <script>
+  const keys = ["Frame","LStick","RStick","KEY_A","KEY_B"];
+  function loadColumns() {
+    for (var i = 0; i < keys.length; i++)  {
+      var tag = document.createElement("td");
+      tag.innerHTML = keys[i];
+      apparatus.appendChild(tag);
+    }
+  }
+
+  function populateTable() {
+
+  }
+
+  function setupUI() {
+    // Create table columns
+    const apparatus = document.getElementById('apparatus');
+    loadColumns();
+
+    const main = document.getElementById('main');
+    var sec = 0
+
+    function cycle() {
+      sec = (Number(sec) + .01).toFixed(2);
+
+      if (sec == 2) {
+        main.innerHTML += "<h1>Based off of PyTAS!</h1>";
+      }
+    }
+
+    setInterval(cycle,10);
+  }
+
+  </script>
+  <!-- End of JS -->
+
+  <!-- Beginning of HTML -->
+  <body onload="setupUI();">
+
+    <div
+      id = "header"
+    >
+
+      <h1><i>TAS-Online Editor</i></h1>
+
+    </div>
+
+    <div
+      id = "main"
+    >
+
+    <table id = "apparatus">
+      <tr>
+
+      </tr>
+    </table>
+
+    </div>
+
+  </body>
+  <!-- End of HTML -->
+
+  <!-- Beginning of CSS -->
+  <style>
+
+  @font-face {
+    font-family: 'moon_get';
+    src: url('./static/fonts/moon_get-Heavy.otf');
+  }
+
+  * {
+    color: #fff;
+    font-family: 'moon_get', sans-serif;
+  }
+
+  body {
+    margin: 0;
+    background-color: #242222;
+  }
+
+  table, th, td {
+    table-layout: fixed;
+    text-align: center;
+    background-color: #2b2e38;
+    width: 90%;
+    height: 100%;
+    border-spacing: 5px;
+    border: 2px solid;
+    border-top-color: rgb(220, 20, 60);
+    border-right-color: rgb(30, 144, 255);
+    border-bottom-color: rgb(220, 20, 60);
+    border-left-color: rgb(30, 144, 255);
+    margin-top: 3vmin;
+  }
+
+  #header {
+    min-height: 10vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(10px + 1vmin);
+    background-color: #18191c;
+    border-radius: 3vmin;
+  }
+  #header h1 {
+    background: linear-gradient(90deg, rgba(255,0,0,1) 0%, rgba(79,176,85,1) 50%, rgba(51,0,255,1) 100%);
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  #main {
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(10px + 1vmin);
+  }
+
+  </style>
+  <!-- End of CSS -->
+
+</html>
