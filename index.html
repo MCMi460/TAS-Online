@@ -26,6 +26,8 @@
     'KEY_LSTICK',
     'KEY_RSTICK',
   ];
+  const YES = '✅';
+  const NO = '⛔';
   var buffer = '1 KEY_A 0;0 0;0\n2 KEY_B 0;0 0;0';
 
   function setupUI() {
@@ -52,12 +54,22 @@
     const updateEvent = document.querySelector('#apparatus');
     updateEvent.addEventListener('click', function (e) {
       try {
-        const cell = e.target.closest('td');
+        let cell = e.target.closest('td');
         if (!cell) {
           return;
         }
-        const row = cell.parentElement;
-        tableUpdate(row.rowIndex, cell.cellIndex);
+        let row = cell.parentElement.rowIndex;
+        let col = cell.cellIndex;
+
+        if (row != 0 && cell.className == 'key') {
+          if (apparatus.children[row].children[col].innerHTML == YES) {
+            apparatus.children[row].children[col].innerHTML = NO;
+          } else {
+            apparatus.children[row].children[col].innerHTML = YES;
+          }
+        }
+
+        tableUpdate(row, col);
       } catch (e) {
         console.log(e);
         main.innerHTML += `<h3 style='color:#d11b24;'>${e}</h3>`;
@@ -82,7 +94,7 @@
       if (i > 2) {
         text = text.substring(4);
       }
-      td.innerHTML = text; td.title = text;
+      td.innerHTML = text; td.title = text; td.className = 'header';
       header.appendChild(td);
     }
   }
@@ -95,21 +107,21 @@
     const lines = buffer.split('\n');
     for (let i = 0; i < lines.length; i++) {
       // Create row
-      line = lines[i].split(' ');
+      let line = lines[i].split(' ');
       if (!line || !/\S/.test(line)) {
         continue;
       }
       let row = document.createElement('tr');
 
       // Frame
-      let frame = document.createElement('td'); frame.class = 'frame';
+      let frame = document.createElement('td'); frame.className = 'frame';
       frame.innerHTML = line[0];
       row.appendChild(frame);
 
       // Sticks
       let stick1 = line[2].split(';').map(Number); let stick2 = line[3].split(';').map(Number);
       let lstick = document.createElement('td'); let rstick = document.createElement('td');
-      lstick.class = 'lstick'; rstick.class = 'rstick';
+      lstick.className = 'lstick'; rstick.className = 'rstick';
       lstick.innerHTML = stick1; rstick.innerHTML = stick2;
       row.appendChild(lstick); row.appendChild(rstick);
 
@@ -121,11 +133,11 @@
         }
       }
       for (let n = 1; n < keys.length; n++) {
-        let keyElem = document.createElement('td'); keyElem.class = 'key';
+        let keyElem = document.createElement('td'); keyElem.className = 'key';
         if (key.includes(keys[n])) {
-          keyElem.innerHTML = '✅';
+          keyElem.innerHTML = YES;
         } else {
-          keyElem.innerHTML = '⛔';
+          keyElem.innerHTML = NO;
         }
         row.appendChild(keyElem);
       }
@@ -135,7 +147,34 @@
   }
 
   function sortTable() {
-    return '';
+    let rows = apparatus.children;
+    let data = '';
+    for (let i = 1; i < rows.length; i++) {
+      let row = rows[i].children;
+
+      // Get frame
+      let frame = row[0].innerHTML;
+
+      // Gets keys
+      let key = [];
+      for (let n = 3; n < row.length; n++) {
+        if (row[n].innerHTML == YES) {
+          key.push(keys[n - 2]);
+        }
+      }
+      if (key == '') {
+        key = ['NONE',];
+      }
+      key = key.join(';');
+
+      // Get sticks
+      lstick = row[1].innerHTML.split(',').map(Number);
+      rstick = row[2].innerHTML.split(',').map(Number);
+
+      // Write to string variable
+      data += `${frame} ${key} ${lstick.join(';')} ${rstick.join(';')}\n`;
+    }
+    return data;
   }
 
   function removeRow(row) {
@@ -225,6 +264,9 @@
     border-bottom-color: #aa1bd1;
     border-left-color: #1e90ff;
     margin-top: 3vmin;
+  }
+
+  .header, .key {
     user-select: none;
   }
 
