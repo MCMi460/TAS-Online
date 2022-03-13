@@ -63,7 +63,6 @@
         if (row != 0 && cell.className == 'frame') {
           let frame = Number(window.prompt('After which frame should this one be placed?', '1'));
           if (frame || frame == 0) {
-            console.log(frame);
             copy(row);
             removeRow(row);
             paste(frame);
@@ -114,60 +113,27 @@
   }
 
   function paste(frame,data = pasteboard) {
-    let paste = data.split(' ');
+    let tempBuffer = buffer.split('\n');
 
-    let row = document.createElement('tr');
-
-    let frameCell = document.createElement('td'); frameCell.className = 'frame';
-    frameCell.innerHTML = Number(frame);
-    row.appendChild(frameCell);
-
-    // Sticks
-    let stick1 = paste[1].split(';').map(Number); let stick2 = paste[2].split(';').map(Number);
-    let lstick = document.createElement('td'); let rstick = document.createElement('td');
-    lstick.className = 'lstick'; rstick.className = 'rstick';
-    lstick.innerHTML = stick1; rstick.innerHTML = stick2;
-    row.appendChild(lstick); row.appendChild(rstick);
-
-    let key = paste[0].split(';');
-    for (let n = 0; n < key.length; n++) {
-      if (!keys.includes(key[n])) {
-        throw `Key at frame ${frame} does not exist.`
+    let possibleFrame = 0;
+    for (let i = 0; i < tempBuffer.length; i++) {
+      if (!tempBuffer[i] || !/\S/.test(tempBuffer[i])) {
+        continue;
       }
-    }
-    for (let n = 1; n < keys.length; n++) {
-      let keyElem = document.createElement('td'); keyElem.className = 'key';
-      if (key.includes(keys[n])) {
-        keyElem.innerHTML = YES;
-      } else {
-        keyElem.innerHTML = NO;
-      }
-      row.appendChild(keyElem);
-    }
-
-    let rows = apparatus.children;
-    let currentFrame = false;
-    let lastFrame = 0;
-    for (let i = 1; i < rows.length; i++) {
-      let currentFrame = rows[i].children;
-
-      if (Number(currentFrame[0].innerHTML) > frame) {
-        let frameToInsert = currentFrame;
+      possibleFrame = Number(tempBuffer[i].split(' ')[0]);
+      if (possibleFrame > frame) {
+        tempBuffer.splice(i, 0, `${frame} ${data}`);
         break;
-      } else {
-        lastFrame = Number(currentFrame[0].innerHTML);
       }
+      possibleFrame += 1;
     }
-    if (currentFrame != false) {
-      apparatus.insertBefore(row, currentFrame);
-    } else if (lastFrame < frame) {
-      apparatus.appendChild(row);
-    } else {
-      console.log(frame);
-      apparatus.insertBefore(row, rows[1]);
+    if (possibleFrame == Number(tempBuffer[tempBuffer.length - 1].split(' ')[0]) + 1) {
+      tempBuffer.push(`${frame} ${data}`);
     }
+    buffer = tempBuffer.join('\n');
 
-    tableUpdate(0,0);
+    // Refill the table
+    populateTable();
   }
 
   function newFrame() {
@@ -310,7 +276,6 @@
     data.sort(function(elem) {
       return Number(elem.split(' ')[0]);
     }).reverse();
-    console.log(data);
     return data.join('\n');
   }
 
