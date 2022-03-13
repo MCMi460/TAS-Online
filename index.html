@@ -2,7 +2,17 @@
 <!-- Created by Deltaion Lee (MCMi460) on Github -->
 <html>
   <head>
-    <meta charset="utf-8">
+    <meta charset = 'utf-8'>
+
+    <!-- Some cosmetics -->
+    <link rel = 'shortcut icon' href = './static/images/smotas.png' />
+    <meta name = 'author' content = 'MCMi460'>
+    <meta name = 'description' content = 'An online Nintendo Switch TAS-ing tool designed for your comfort of use!'>
+    <meta name = 'keywords' content = 'TAS, Nintendo Switch, Super Mario Odyssey, Development, Tool'>
+    <meta name = 'theme-color' content = '#f018cf'>
+    <meta property = 'og:title' content = 'TAS-Online' />
+    <meta property = 'og:image' content = './static/images/smotas.png' />
+
     <title>TAS-Online</title>
   </head>
 
@@ -60,14 +70,30 @@
         let row = cell.parentElement.rowIndex;
         let col = cell.cellIndex;
 
-        if (row != 0 && cell.className == 'frame') {
+        if (cell.className == 'frame') {
           let frame = Number(window.prompt('After which frame should this one be placed?', '1'));
-          if (frame || frame == 0) {
+          if (Number.isInteger(frame)) {
             copy(row);
             removeRow(row);
             paste(frame);
           }
-        } else if (row != 0 && cell.className == 'key') {
+        } else if (cell.className == 'lstick' || cell.className == 'rstick') {
+          let stick1 = Number(window.prompt('What should the X coordinate be?', '0'));
+          let stick2 = Number(window.prompt('What should the Y coordinate be?', '0'));
+          if ( Number.isInteger(stick1) && Number.isInteger(stick2) ) {
+            if (stick1 > 32767) {
+              stick1 = 32767;
+            } else if (stick1 < -32767) {
+              stick1 = -32767;
+            } if (stick2 > 32767) {
+              stick2 = 32767;
+            } else if (stick2 < -32767) {
+              stick2 = -32767;
+            }
+            apparatus.children[row].children[col].innerHTML = `${stick1},${stick2}`;
+            apparatus.children[row].children[col].title = `${stick1},${stick2}`;
+          }
+        } else if (cell.className == 'key') {
           if (apparatus.children[row].children[col].innerHTML == YES) {
             apparatus.children[row].children[col].innerHTML = NO;
           } else {
@@ -210,6 +236,7 @@
       let lstick = document.createElement('td'); let rstick = document.createElement('td');
       lstick.className = 'lstick'; rstick.className = 'rstick';
       lstick.innerHTML = stick1; rstick.innerHTML = stick2;
+      lstick.title = stick1; rstick.title = stick2;
       row.appendChild(lstick); row.appendChild(rstick);
 
       // Keys

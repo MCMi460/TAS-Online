@@ -3,6 +3,4 @@ test*.*
 
 # Misc
 .DS_Store
-
-# Fonts
-moon_get-Heavy.*
+static/
