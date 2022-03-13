@@ -30,6 +30,7 @@
   const YES = '✅';
   const NO = '⛔';
   var buffer = '1 KEY_A 0;0 0;0\n2 KEY_B 0;0 0;0';
+  var pasteboard = 'NONE 0;0 0;0';
 
   function setupUI() {
     // Create table columns
@@ -61,8 +62,11 @@
 
         if (row != 0 && cell.className == 'frame') {
           let frame = Number(window.prompt('After which frame should this one be placed?', '1'));
-          if (frame) {
-
+          if (frame || frame == 0) {
+            console.log(frame);
+            copy(row);
+            removeRow(row);
+            paste(frame);
           }
         } else if (row != 0 && cell.className == 'key') {
           if (apparatus.children[row].children[col].innerHTML == YES) {
@@ -86,6 +90,90 @@
     }
   }
 
+  function copy(index) {
+    let row = apparatus.children[index].children;
+
+    let frame = row[0].innerHTML;
+
+    let key = [];
+    for (let n = 3; n < row.length; n++) {
+      if (row[n].innerHTML == YES) {
+        key.push(keys[n - 2]);
+      }
+    }
+    if (key == '') {
+      key = ['NONE',];
+    }
+    key = key.join(';');
+
+    lstick = row[1].innerHTML.split(',').map(Number);
+    rstick = row[2].innerHTML.split(',').map(Number);
+
+    pasteboard = `${key} ${lstick.join(';')} ${rstick.join(';')}\n`;
+    return pasteboard;
+  }
+
+  function paste(frame,data = pasteboard) {
+    let paste = data.split(' ');
+
+    let row = document.createElement('tr');
+
+    let frameCell = document.createElement('td'); frameCell.className = 'frame';
+    frameCell.innerHTML = Number(frame);
+    row.appendChild(frameCell);
+
+    // Sticks
+    let stick1 = paste[1].split(';').map(Number); let stick2 = paste[2].split(';').map(Number);
+    let lstick = document.createElement('td'); let rstick = document.createElement('td');
+    lstick.className = 'lstick'; rstick.className = 'rstick';
+    lstick.innerHTML = stick1; rstick.innerHTML = stick2;
+    row.appendChild(lstick); row.appendChild(rstick);
+
+    let key = paste[0].split(';');
+    for (let n = 0; n < key.length; n++) {
+      if (!keys.includes(key[n])) {
+        throw `Key at frame ${frame} does not exist.`
+      }
+    }
+    for (let n = 1; n < keys.length; n++) {
+      let keyElem = document.createElement('td'); keyElem.className = 'key';
+      if (key.includes(keys[n])) {
+        keyElem.innerHTML = YES;
+      } else {
+        keyElem.innerHTML = NO;
+      }
+      row.appendChild(keyElem);
+    }
+
+    let rows = apparatus.children;
+    let currentFrame = false;
+    let lastFrame = 0;
+    for (let i = 1; i < rows.length; i++) {
+      let currentFrame = rows[i].children;
+
+      if (Number(currentFrame[0].innerHTML) > frame) {
+        let frameToInsert = currentFrame;
+        break;
+      } else {
+        lastFrame = Number(currentFrame[0].innerHTML);
+      }
+    }
+    if (currentFrame != false) {
+      apparatus.insertBefore(row, currentFrame);
+    } else if (lastFrame < frame) {
+      apparatus.appendChild(row);
+    } else {
+      console.log(frame);
+      apparatus.insertBefore(row, rows[1]);
+    }
+
+    tableUpdate(0,0);
+  }
+
+  function newFrame() {
+    paste(Number(apparatus.children[apparatus.children.length - 1].children[0].innerHTML) + 1,'NONE 0;0 0;0');
+  }
+
   function readFile(event) {
     try {
       var input = event.target;
@@ -93,7 +181,7 @@
       var reader = new FileReader();
       reader.onload = function() {
         buffer = reader.result;
-        populateTable();
+        populateTable(true);
       };
       reader.readAsText(input.files[0]);
     } catch (e) {
@@ -132,7 +220,7 @@
     }
   }
 
-  function populateTable() {
+  function populateTable(newFile = false) {
     while (apparatus.children.length > 1) {
       apparatus.removeChild(apparatus.lastChild);
     }
@@ -178,18 +266,22 @@
       apparatus.appendChild(row);
     }
     buffer = sortTable();
+    if (newFile) {
+      tableUpdate(0,0);
+    }
   }
 
   function sortTable() {
     let rows = apparatus.children;
-    let data = '';
+    let data = [];
+    let possibleFrame = 0;
     for (let i = 1; i < rows.length; i++) {
       let row = rows[i].children;
 
       // Get frame
-      let frame = row[0].innerHTML;
+      let frame = Number(row[0].innerHTML);
 
-      // Gets keys
+      // Get keys
       let key = [];
       for (let n = 3; n < row.length; n++) {
         if (row[n].innerHTML == YES) {
@@ -202,17 +294,31 @@
       key = key.join(';');
 
       // Get sticks
-      lstick = row[1].innerHTML.split(',').map(Number);
-      rstick = row[2].innerHTML.split(',').map(Number);
+      let lstick = row[1].innerHTML.split(',').map(Number);
+      let rstick = row[2].innerHTML.split(',').map(Number);
+
+      if (possibleFrame < frame) {
+        possibleFrame = frame;
+      } else {
+        frame = possibleFrame + 1;
+        possibleFrame = frame;
+      }
 
       // Write to string variable
-      data += `${frame} ${key} ${lstick.join(';')} ${rstick.join(';')}\n`;
+      data.push(`${frame} ${key} ${lstick.join(';')} ${rstick.join(';')}`);
     }
-    return data;
+    data.sort(function(elem) {
+      return Number(elem.split(' ')[0]);
+    }).reverse();
+    console.log(data);
+    return data.join('\n');
   }
 
   function removeRow(row) {
-
+    row = apparatus.children[row];
+    apparatus.removeChild(row);
+    tableUpdate(0,0);
+    return row;
   }
 
   function changeStick(row, col) {
@@ -254,6 +360,7 @@
 
     <input type = 'file' id = 'file-dialog' accept = 'text/plain' onchange = 'readFile(event);'>
     <button onclick = 'downloadBuffer();'>Save progress</button>
+    <button onclick = 'newFrame();'>Add Frame</button>
 
     </div>
 
