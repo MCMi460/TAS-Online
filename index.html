@@ -153,9 +153,10 @@
       }
       possibleFrame += 1;
     }
-    if (possibleFrame == Number(tempBuffer[tempBuffer.length - 1].split(' ')[0]) + 1) {
+    if (possibleFrame == Number(tempBuffer[tempBuffer.length - 1].split(' ')[0]) + 1 || (tempBuffer.length == 1 && tempBuffer[0] == '') ) {
       tempBuffer.push(`${frame} ${data}`);
     }
+    console.log(tempBuffer);
     buffer = tempBuffer.join('\n');
 
     // Refill the table
@@ -163,7 +164,27 @@
   }
 
   function newFrame() {
-    paste(Number(apparatus.children[apparatus.children.length - 1].children[0].innerHTML) + 1,'NONE 0;0 0;0');
+    let frame = 0;
+    if (apparatus.children.length > 1) {
+      frame = Number(apparatus.children[apparatus.children.length - 1].children[0].innerHTML);
+    }
+    console.log(frame);
+    paste(frame + 1,'NONE 0;0 0;0');
+  }
+
+  function delFrame() {
+    let frame = Number(window.prompt('Which frame should be removed?', '1'));
+    if (Number.isInteger(frame)) {
+      let rows = apparatus.children;
+      for (let i = 1; i < rows.length; i++) {
+        if (Number(rows[i].children[0].innerHTML) == frame) {
+          apparatus.removeChild(rows[i]);
+          break;
+        }
+      }
+    }
+
+    tableUpdate(0,0);
   }
 
   function readFile(event) {
@@ -353,6 +374,7 @@
     <input type = 'file' id = 'file-dialog' accept = 'text/plain' onchange = 'readFile(event);'>
     <button onclick = 'downloadBuffer();'>Save progress</button>
     <button onclick = 'newFrame();'>Add Frame</button>
+    <button onclick = 'delFrame();'>Remove Frame</button>
 
     </div>
 
