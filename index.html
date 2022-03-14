@@ -18,6 +18,7 @@
 
   <!-- Beginning of JS -->
   <script>
+  // TAS-related variables
   const keys = [
     'NONE',
     'KEY_A',
@@ -42,6 +43,18 @@
   var buffer = '1 KEY_B 0;0 0;0\n6 KEY_ZL 0;0 0;0\n41 KEY_ZL;KEY_Y 0;0 0;0\n43 KEY_X;KEY_A 30000;0 0;0\n44 KEY_A 30000;0 0;0\n45 KEY_A 30000;0 0;0\n46 KEY_A 30000;0 0;0\n47 KEY_A 30000;0 0;0';
   var pasteboard = 'NONE 0;0 0;0';
 
+  // Mouse-related variables
+  var lButton = false;
+
+  function onMouseDown() {
+    lButton = true;
+  } function onMouseUp() {
+    lButton = false;
+  }
+  document.addEventListener('mousedown', onMouseDown);
+  document.addEventListener('mouseup', onMouseUp);
+
+  // Important functions
   function setupUI() {
     // Create table columns
     var apparatus = document.getElementById('apparatus');
@@ -54,13 +67,13 @@
     var sec = 0
 
     function cycle() {
-      sec = (Number(sec) + .01).toFixed(2);
+      sec = (Number(sec) + .1).toFixed(1);
 
       fillText(sec);
     }
 
     fillText(sec);
-    setInterval(cycle,10);
+    setInterval(cycle,100);
 
     // Create listener for tableUpdate
     const updateEvent = document.querySelector('#apparatus');
@@ -73,49 +86,7 @@
         let row = cell.parentElement.rowIndex;
         let col = cell.cellIndex;
 
-        if (cell.className == 'frame') {
-          let prompt = window.prompt('After which frame should this one be placed?', '1');
-          if (prompt) {
-            let frame = Number(prompt);
-            if (Number.isInteger(frame)) {
-              copy(row);
-              removeRow(row);
-              paste(frame);
-            }
-          }
-        } else if (cell.className == 'lstick' || cell.className == 'rstick') {
-          let prompt1 = window.prompt('What should the X coordinate be?', '0');
-          if (prompt1) {
-            let prompt2 = window.prompt('What should the Y coordinate be?', '0');
-            if (prompt2) {
-              let stick1 = Number(prompt1);
-              let stick2 = Number(prompt2);
-              if ( Number.isInteger(stick1) && Number.isInteger(stick2) ) {
-                if (stick1 > 32767) {
-                  stick1 = 32767;
-                } else if (stick1 < -32767) {
-                  stick1 = -32767;
-                } if (stick2 > 32767) {
-                  stick2 = 32767;
-                } else if (stick2 < -32767) {
-                  stick2 = -32767;
-                }
-                apparatus.children[row].children[col].innerHTML = `${stick1},${stick2}`;
-                apparatus.children[row].children[col].title = `${stick1},${stick2}`;
-            }
-
-          }
-
-          }
-        } else if (cell.className == 'key') {
-          if (apparatus.children[row].children[col].innerHTML == YES) {
-            apparatus.children[row].children[col].innerHTML = NO;
-          } else {
-            apparatus.children[row].children[col].innerHTML = YES;
-          }
-        }
-
-        tableUpdate(row, col);
+        tableUpdate(row, col, cell);
       } catch (e) {
         console.log(e);
         main.innerHTML += `<h3 style='color:#d11b24;'>${e}</h3>`;
@@ -358,15 +329,95 @@
   function fillText(sec = 0) {
     let textarea = document.getElementById('sidebar').children[1];
 
-    let tag = `Buffer updated at ${Date.now()} (${sec} seconds of runtime)`;
+    let date = new Date();
+    let time = date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
+    let tag = `Buffer updated at ${time} (${sec} seconds of runtime)`;
 
     textarea.title = tag;
     textarea.innerHTML = '<code>' + buffer.replaceAll('\n','<br>') + `</code><br><br>${tag}`;
   }
 
+  function changeKey(row, col) {
+    if (apparatus.children[row].children[col].innerHTML == YES) {
+      apparatus.children[row].children[col].innerHTML = NO;
+    } else {
+      apparatus.children[row].children[col].innerHTML = YES;
+    }
+  }
+
+  function changeFrame(row, col) {
+    let prompt = window.prompt('After which frame should this one be placed?', '1');
+    if (prompt) {
+      let frame = Number(prompt);
+      if (Number.isInteger(frame)) {
+        copy(row);
+        removeRow(row);
+        paste(frame);
+      }
+    }
+  }
+
+
+  function getCoords(e) {
+    if (!lButton) {
+      return;
+    }
+    let joystick = document.getElementById('joystick');
+    let radius = 32767;
+    let x = (e.clientX - joystick.offsetLeft - joystick.offsetWidth / 2) * radius / (joystick.offsetWidth / 2);
+    let y = ((e.clientY - joystick.offsetTop - joystick.offsetWidth / 2) * -1) * radius / (joystick.offsetWidth / 2);
+    x = x.toFixed(0); y = y.toFixed(0);
+    let div = document.getElementById('coords');
+    div.innerHTML='Coordinates: (' + x + ',' + y + ')\n';
+    let cursor = document.getElementById('joystick-cursor');
+    cursor.style.marginTop = `${(e.clientY - joystick.offsetTop) / (joystick.offsetHeight) * 100}%`;
+    cursor.style.marginLeft = `${(e.clientX - joystick.offsetLeft) / (joystick.offsetWidth) * 100}%`;
+    console.log(`${cursor.style.marginTop} ${cursor.style.marginLeft}`);
+  }
+
+  function changeStick(row, col) {
+    document.getElementById('joystick-container').style.width = '100%';
+    document.getElementById('joystick-cursor').style.display = 'block';
+    return;
+    document.getElementById('joystick-container').style.width = '0%';
+    /* Remove commented code when done
+    let prompt1 = window.prompt('What should the X coordinate be?', '0');
+    if (prompt1) {
+      let prompt2 = window.prompt('What should the Y coordinate be?', '0');
+      if (prompt2) {
+        let stick1 = Number(prompt1);
+        let stick2 = Number(prompt2);
+        if ( Number.isInteger(stick1) && Number.isInteger(stick2) ) {
+          if (stick1 > 32767) {
+            stick1 = 32767;
+          } else if (stick1 < -32767) {
+            stick1 = -32767;
+          } if (stick2 > 32767) {
+            stick2 = 32767;
+          } else if (stick2 < -32767) {
+            stick2 = -32767;
+          }
+          apparatus.children[row].children[col].innerHTML = `${stick1},${stick2}`;
+          apparatus.children[row].children[col].title = `${stick1},${stick2}`;
+        }
+      }
+    }
+    */
+  }
+
   // Events
 
-  function tableUpdate(row, col) {
+  function tableUpdate(row, col, cell = false) {
+    if (cell) {
+      if (cell.className == 'frame') {
+        changeFrame(row, col);
+      } else if (cell.className == 'lstick' || cell.className == 'rstick') {
+        changeStick(row, col);
+      } else if (cell.className == 'key') {
+        changeKey(row, col);
+      }
+    }
+
     // Sort table, then write the changes
     buffer = sortTable();
     // Fill table
@@ -388,7 +439,7 @@
   <body onload='setupUI();'>
 
     <div
-      id='sidebar'
+      id = 'sidebar'
       class = 'sidebar'
     >
 
@@ -401,14 +452,33 @@
       </p>
 
       <p>
-        Created and designed by <a href = 'https://github.com/MCMi460'>Deltaion Lee (MCMi460)</a>
+        Created and designed by <a href = 'https://github.com/MCMi460' target = '_blank'>Deltaion Lee (MCMi460)</a>
         <br><br>
-        Built using <a href = 'https://github.com/hamhub7/tas-script/blob/master/lua/lib/nxtas.md'>nx-TAS</a> by <a href = 'https://github.com/hamhub7'>hamhub7</a>
+        Built using <a href = 'https://github.com/hamhub7/tas-script/blob/master/lua/lib/nxtas.md' target = '_blank'>nx-TAS</a> by <a href = 'https://github.com/hamhub7' target = '_blank'>hamhub7</a>
         <br><br>
-        <a href = 'https://github.com/MCMi460/TAS-Online'>See on Github</a>!
+        <a href = 'https://github.com/MCMi460/TAS-Online' target = '_blank'>See on Github</a>!
         <br><br><br>
         <a href = 'javascript:window.location.reload();'>Reset page</a>
       </p>
+
+    </div>
+
+    <div
+      id = 'joystick-container'
+    >
+
+      <div
+        id = 'joystick'
+        onmousemove = 'getCoords(event)'
+      >
+        <div id = 'joystick-cursor'></div>
+      </div>
+
+      <div
+        id = 'coords'
+      >
+        <!-- Coords go here -->
+      </div>
 
     </div>
 
@@ -550,6 +620,7 @@
     background-color: #000;
     overflow-x: hidden;
     transition: 0.3s;
+    opacity: 0.9;
   }
 
   .sidebar p {
@@ -589,6 +660,47 @@
     margin: 5px;
     font-size: 4vmax;
     text-decoration: none;
+  }
+
+  #joystick-container {
+    font-family: sans-serif;
+    height: 100%;
+    width: 0%;
+    position: fixed;
+    z-index: 2;
+    top: 0%;
+    right: 0%;
+    background-color: #000;
+    overflow-x: hidden;
+    transition: 0.5s;
+    opacity: 0.9;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #joystick {
+    width: 80vh;
+    height: 80vh;
+    border: 1vmin solid #c3c3c3;
+    border-radius: 100%;
+    background-color: #59504f;
+    opacity: 1;
+  }
+
+  #joystick-cursor {
+    display: none;
+    width: 2vmin;
+    height: 2vmin;
+    border-radius: 100%;
+    background-color: #f71d05;
+    position: fixed;
+    margin-top: calc(50% - 2vmin);
+    margin-left: calc(50% - 1vmin);
+    top: inherit;
+    left: inherit;
+    z-index: 3;
   }
 
   </style>
