@@ -438,6 +438,8 @@
   function changeStick(row, col) {
     let container = document.getElementById('joystick-container');
     let cursor = document.getElementById('joystick-cursor');
+    let xCrosshair = document.getElementById('joystick-x-crosshair');
+    let yCrosshair = document.getElementById('joystick-y-crosshair');
     if (row == 0 && col == 0) {
       // Get coordinates to write
       let x = document.getElementById('x-coordinate').value;
@@ -454,13 +456,17 @@
       // Close joystick-related elements
       container.style.width = '0%';
       cursor.style.display = 'none';
-      
+      xCrosshair.style.display = 'none';
+      yCrosshair.style.display = 'none';
+
       tableUpdate(0,0);
       return;
     }
     container.style.width = '100%';
     container.title = `${row}, ${col}`;
     cursor.style.display = 'block';
+    xCrosshair.style.display = 'block';
+    yCrosshair.style.display = 'block';
     let [x,y] = apparatus.children[row].children[col].innerHTML.split(',').map(Number);
     document.getElementById('x-coordinate').value = `${x}`;
     document.getElementById('y-coordinate').value = `${y}`;
@@ -533,6 +539,8 @@
         id = 'joystick'
         onmousemove = 'cursorMove(event)'
       >
+        <div id = 'joystick-x-crosshair'></div>
+        <div id = 'joystick-y-crosshair'></div>
         <div id = 'joystick-cursor'></div>
       </div>
 
@@ -758,6 +766,28 @@
     opacity: 1;
   }
 
+  #joystick-x-crosshair {
+    background-color: #1d2024;
+    display: none;
+    position: fixed;
+    width: 80vh;
+    height: 1vh;
+    top: calc(50% - 4vh);
+    left: calc(50% - 40vh); /* inconsistent */
+    z-index: 2;
+  }
+
+  #joystick-y-crosshair {
+    background-color: #1d2024;
+    display: none;
+    position: fixed;
+    width: 1vh;
+    height: 80vh;
+    top: calc(50% - 40vh - 3.5vmin); /* inconsistent */
+    left: calc(50% - .5vh);
+    z-index: 2;
+  }
+
   #joystick-cursor {
     display: none;
     width: 2vmin;
@@ -771,11 +801,16 @@
   }
 
   #coords input {
+    height: 1.5vmin;
     margin-top: 1vmin;
     margin-bottom: 1vmin;
     color: #000;
   }
 
+  #confirm-joystick button {
+    height: 3vmin;
+  }
+  
   </style>
   <!-- End of CSS -->
 
