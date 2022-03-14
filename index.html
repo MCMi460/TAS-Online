@@ -92,6 +92,17 @@
         main.innerHTML += `<h3 style='color:#d11b24;'>${e}</h3>`;
       }
     });
+
+    // XY Div
+    function checkInput(e) {
+      var chr = String.fromCharCode(e.which);
+      if ('1234567890-'.indexOf(chr) < 0) {
+        return false;
+    }};
+    let xcoord = document.getElementById('x-coordinate');
+    let ycoord = document.getElementById('y-coordinate');
+    xcoord.onkeypress = checkInput; xcoord.addEventListener('input', inputUpdate);
+    ycoord.onkeypress = checkInput; ycoord.addEventListener('input', inputUpdate);
     // End of listeners
 
     } catch (e) {
@@ -313,8 +324,8 @@
       // Write to string variable
       data.push(`${frame} ${key} ${lstick.join(';')} ${rstick.join(';')}`);
     }
-    data.sort(function(elem) {
-      return Number(elem.split(' ')[0]);
+    data.sort(function(elem1,elem2) {
+      return Number(elem2.split(' ')[0]) - Number(elem1.split(' ')[0]);
     }).reverse();
     return data.join('\n');
   }
@@ -357,8 +368,31 @@
     }
   }
 
+  function checkBounds(x,y,radius) {
+    // Check if out of bounds
+    if (Math.sqrt((x - 0) ** 2 + (y - 0) ** 2)  > radius) {
+      // Outside of circle
+      return false;
+    }
+    // Cap X/Y level to radius
+    if (x > radius) {
+      x = radius;
+      return false;
+    } else if (x < (-1 * radius)) {
+      x = -1 * radius;
+      return false;
+    }
+    if (y > radius) {
+      y = radius;
+      return false;
+    } else if (y < (-1 * radius)) {
+      y = -1 * radius;
+      return false;
+    }
+    return true;
+  }
 
-  function getCoords(e) {
+  function cursorMove(e) {
     if (!lButton) {
       return;
     }
@@ -367,42 +401,68 @@
     let x = (e.clientX - joystick.offsetLeft - joystick.offsetWidth / 2) * radius / (joystick.offsetWidth / 2);
     let y = ((e.clientY - joystick.offsetTop - joystick.offsetWidth / 2) * -1) * radius / (joystick.offsetWidth / 2);
     x = x.toFixed(0); y = y.toFixed(0);
-    let div = document.getElementById('coords');
-    div.innerHTML='Coordinates: (' + x + ',' + y + ')\n';
+    if (!checkBounds(x,y,radius)) {
+      return;
+    }
+    // Set coords
+    let coords = document.getElementById('coords').children;
+    coords[0].value = `${x}`;
+    coords[1].value = `${y}`;
+    // Move cursor
     let cursor = document.getElementById('joystick-cursor');
-    cursor.style.marginTop = `${(e.clientY - joystick.offsetTop) / (joystick.offsetHeight) * 100}%`;
-    cursor.style.marginLeft = `${(e.clientX - joystick.offsetLeft) / (joystick.offsetWidth) * 100}%`;
-    console.log(`${cursor.style.marginTop} ${cursor.style.marginLeft}`);
+    cursor.style.left = `calc(${e.clientX}px - 1vmin)`;
+    cursor.style.top = `calc(${e.clientY}px - 1vmin)`;
+  }
+
+  function inputUpdate() {
+    let joystick = document.getElementById('joystick');
+    let coords = document.getElementById('coords').children;
+    let cursor = document.getElementById('joystick-cursor');
+    let radius = 32767;
+    let x = Number(coords[0].value);
+    let y = Number(coords[1].value);
+    let clientX = x * (joystick.offsetWidth / 2) / radius + joystick.offsetWidth / 2 + joystick.offsetLeft;
+    let clientY = y * (joystick.offsetWidth / 2) / radius / -1 + joystick.offsetWidth / 2 + joystick.offsetTop;
+    if (!checkBounds(x,y,radius)) {
+      coords[0].value = 0;
+      coords[1].value = 0;
+      inputUpdate();
+      return;
+    }
+    cursor.style.left = `calc(${clientX}px - 1vmin)`;
+    cursor.style.top = `calc(${clientY}px - 1vmin)`;
   }
 
   function changeStick(row, col) {
-    document.getElementById('joystick-container').style.width = '100%';
-    document.getElementById('joystick-cursor').style.display = 'block';
-    return;
-    document.getElementById('joystick-container').style.width = '0%';
-    /* Remove commented code when done
-    let prompt1 = window.prompt('What should the X coordinate be?', '0');
-    if (prompt1) {
-      let prompt2 = window.prompt('What should the Y coordinate be?', '0');
-      if (prompt2) {
-        let stick1 = Number(prompt1);
-        let stick2 = Number(prompt2);
-        if ( Number.isInteger(stick1) && Number.isInteger(stick2) ) {
-          if (stick1 > 32767) {
-            stick1 = 32767;
-          } else if (stick1 < -32767) {
-            stick1 = -32767;
-          } if (stick2 > 32767) {
-            stick2 = 32767;
-          } else if (stick2 < -32767) {
-            stick2 = -32767;
-          }
-          apparatus.children[row].children[col].innerHTML = `${stick1},${stick2}`;
-          apparatus.children[row].children[col].title = `${stick1},${stick2}`;
-        }
-      }
+    let container = document.getElementById('joystick-container');
+    let cursor = document.getElementById('joystick-cursor');
+    if (row == 0 && col == 0) {
+      // Get coordinates to write
+      let x = document.getElementById('x-coordinate').value;
+      let y = document.getElementById('y-coordinate').value;
+
+      // Get location of cell
+      let cellR = container.title.split(', ')[0];
+      let cellC = container.title.split(', ')[1];
+
+      apparatus.children[cellR].children[cellC].innerHTML = `${x},${y}`;
+      apparatus.children[cellR].children[cellC].title = `${x},${y}`;
+      container.title = '';
+
+      // Close joystick-related elements
+      container.style.width = '0%';
+      cursor.style.display = 'none';
+      
+      tableUpdate(0,0);
+      return;
     }
-    */
+    container.style.width = '100%';
+    container.title = `${row}, ${col}`;
+    cursor.style.display = 'block';
+    let [x,y] = apparatus.children[row].children[col].innerHTML.split(',').map(Number);
+    document.getElementById('x-coordinate').value = `${x}`;
+    document.getElementById('y-coordinate').value = `${y}`;
+    inputUpdate();
   }
 
   // Events
@@ -469,7 +529,7 @@
 
       <div
         id = 'joystick'
-        onmousemove = 'getCoords(event)'
+        onmousemove = 'cursorMove(event)'
       >
         <div id = 'joystick-cursor'></div>
       </div>
@@ -478,6 +538,14 @@
         id = 'coords'
       >
         <!-- Coords go here -->
+        <input type = 'number' id = 'x-coordinate' name = 'X-Value' min = '-32767' max = '32767' value = '0'>
+        <input type = 'number' id = 'y-coordinate' name = 'Y-Value' min = '-32767' max = '32767' value = '0'>
+      </div>
+
+      <div
+        id = 'confirm-joystick'
+      >
+        <button onclick = 'changeStick(0,0);'>Confirm Changes</button>
       </div>
 
     </div>
@@ -672,7 +740,6 @@
     right: 0%;
     background-color: #000;
     overflow-x: hidden;
-    transition: 0.5s;
     opacity: 0.9;
     display: flex;
     flex-direction: column;
@@ -696,11 +763,15 @@
     border-radius: 100%;
     background-color: #f71d05;
     position: fixed;
-    margin-top: calc(50% - 2vmin);
-    margin-left: calc(50% - 1vmin);
-    top: inherit;
-    left: inherit;
+    top: calc(50% - 1vmin);
+    left: calc(50% - 1vmin);
     z-index: 3;
+  }
+
+  #coords input {
+    margin-top: 1vmin;
+    margin-bottom: 1vmin;
+    color: #000;
   }
 
   </style>
