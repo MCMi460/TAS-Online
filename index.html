@@ -39,7 +39,7 @@
   ];
   const YES = '✅';
   const NO = '⛔';
-  var buffer = '1 KEY_A 0;0 0;0\n2 KEY_B 0;0 0;0';
+  var buffer = '1 KEY_B 0;0 0;0\n6 KEY_ZL 0;0 0;0\n41 KEY_ZL;KEY_Y 0;0 0;0\n43 KEY_X;KEY_A 30000;0 0;0\n44 KEY_A 30000;0 0;0\n45 KEY_A 30000;0 0;0\n46 KEY_A 30000;0 0;0\n47 KEY_A 30000;0 0;0';
   var pasteboard = 'NONE 0;0 0;0';
 
   function setupUI() {
@@ -55,9 +55,12 @@
 
     function cycle() {
       sec = (Number(sec) + .01).toFixed(2);
+
+      fillText(sec);
     }
 
-    //setInterval(cycle,10);
+    fillText(sec);
+    setInterval(cycle,10);
 
     // Create listener for tableUpdate
     const updateEvent = document.querySelector('#apparatus');
@@ -71,27 +74,38 @@
         let col = cell.cellIndex;
 
         if (cell.className == 'frame') {
-          let frame = Number(window.prompt('After which frame should this one be placed?', '1'));
-          if (Number.isInteger(frame)) {
-            copy(row);
-            removeRow(row);
-            paste(frame);
+          let prompt = window.prompt('After which frame should this one be placed?', '1');
+          if (prompt) {
+            let frame = Number(prompt);
+            if (Number.isInteger(frame)) {
+              copy(row);
+              removeRow(row);
+              paste(frame);
+            }
           }
         } else if (cell.className == 'lstick' || cell.className == 'rstick') {
-          let stick1 = Number(window.prompt('What should the X coordinate be?', '0'));
-          let stick2 = Number(window.prompt('What should the Y coordinate be?', '0'));
-          if ( Number.isInteger(stick1) && Number.isInteger(stick2) ) {
-            if (stick1 > 32767) {
-              stick1 = 32767;
-            } else if (stick1 < -32767) {
-              stick1 = -32767;
-            } if (stick2 > 32767) {
-              stick2 = 32767;
-            } else if (stick2 < -32767) {
-              stick2 = -32767;
+          let prompt1 = window.prompt('What should the X coordinate be?', '0');
+          if (prompt1) {
+            let prompt2 = window.prompt('What should the Y coordinate be?', '0');
+            if (prompt2) {
+              let stick1 = Number(prompt1);
+              let stick2 = Number(prompt2);
+              if ( Number.isInteger(stick1) && Number.isInteger(stick2) ) {
+                if (stick1 > 32767) {
+                  stick1 = 32767;
+                } else if (stick1 < -32767) {
+                  stick1 = -32767;
+                } if (stick2 > 32767) {
+                  stick2 = 32767;
+                } else if (stick2 < -32767) {
+                  stick2 = -32767;
+                }
+                apparatus.children[row].children[col].innerHTML = `${stick1},${stick2}`;
+                apparatus.children[row].children[col].title = `${stick1},${stick2}`;
             }
-            apparatus.children[row].children[col].innerHTML = `${stick1},${stick2}`;
-            apparatus.children[row].children[col].title = `${stick1},${stick2}`;
+
+          }
+
           }
         } else if (cell.className == 'key') {
           if (apparatus.children[row].children[col].innerHTML == YES) {
@@ -156,7 +170,6 @@
     if (possibleFrame == Number(tempBuffer[tempBuffer.length - 1].split(' ')[0]) + 1 || (tempBuffer.length == 1 && tempBuffer[0] == '') ) {
       tempBuffer.push(`${frame} ${data}`);
     }
-    console.log(tempBuffer);
     buffer = tempBuffer.join('\n');
 
     // Refill the table
@@ -168,12 +181,20 @@
     if (apparatus.children.length > 1) {
       frame = Number(apparatus.children[apparatus.children.length - 1].children[0].innerHTML);
     }
-    console.log(frame);
     paste(frame + 1,'NONE 0;0 0;0');
   }
 
   function delFrame() {
-    let frame = Number(window.prompt('Which frame should be removed?', '1'));
+    if (apparatus.children.length > 1) {
+      var option = Number(apparatus.children[1].children[0].innerHTML);
+    } else {
+      return;
+    }
+    let prompt = window.prompt('Which frame should be removed?', option);
+    if (!prompt) {
+      return;
+    }
+    let frame = Number(prompt);
     if (Number.isInteger(frame)) {
       let rows = apparatus.children;
       for (let i = 1; i < rows.length; i++) {
@@ -334,23 +355,30 @@
     return row;
   }
 
-  function changeStick(row, col) {
+  function fillText(sec = 0) {
+    let textarea = document.getElementById('sidebar').children[1];
 
+    let tag = `Buffer updated at ${Date.now()} (${sec} seconds of runtime)`;
+
+    textarea.title = tag;
+    textarea.innerHTML = '<code>' + buffer.replaceAll('\n','<br>') + `</code><br><br>${tag}`;
   }
 
   // Events
 
   function tableUpdate(row, col) {
-    if (col == keys.length + 2 && row != 0) {
-      removeRow(row);
-    } else if (3 > col > 0 && row != 0) {
-      changeStick(row, col);
-    }
-
     // Sort table, then write the changes
     buffer = sortTable();
     // Fill table
     populateTable();
+  }
+
+  function sidebar(toggle) {
+    let width = '0%';
+    if (toggle) {
+      width = '25%';
+    }
+    document.getElementById('sidebar').style.width = width;
   }
 
   </script>
@@ -360,9 +388,35 @@
   <body onload='setupUI();'>
 
     <div
+      id='sidebar'
+      class = 'sidebar'
+    >
+
+      <a href = 'javascript:sidebar(false);' id = 'closeSidebar'>
+        &times;
+      </a>
+
+      <p>
+
+      </p>
+
+      <p>
+        Created and designed by <a href = 'https://github.com/MCMi460'>Deltaion Lee (MCMi460)</a>
+        <br><br>
+        Built using <a href = 'https://github.com/hamhub7/tas-script/blob/master/lua/lib/nxtas.md'>nx-TAS</a> by <a href = 'https://github.com/hamhub7'>hamhub7</a>
+        <br><br>
+        <a href = 'https://github.com/MCMi460/TAS-Online'>See on Github</a>!
+        <br><br><br>
+        <a href = 'javascript:window.location.reload();'>Reset page</a>
+      </p>
+
+    </div>
+
+    <div
       id = 'banner'
     >
 
+      <a href = 'javascript:sidebar(true);' id = 'openSidebar'>&#9776;</a>
       <h1><i>TAS-Online Editor</i></h1>
 
     </div>
@@ -483,6 +537,58 @@
     justify-content: space-evenly;
     font-size: calc(10px + 1vmin);
     margin-top: 2vmin;
+  }
+
+  .sidebar {
+    font-family: sans-serif;
+    height: 100%;
+    width: 0%;
+    position: fixed;
+    z-index: 1;
+    top: 0%;
+    left: 0%;
+    background-color: #000;
+    overflow-x: hidden;
+    transition: 0.3s;
+  }
+
+  .sidebar p {
+    font-family: sans-serif;
+    padding: 2vmin;
+    padding-left: 3vmin;
+    text-decoration: none;
+    font-size: 1.5vmin;
+    color: #fff;
+    display: block;
+    overflow: hidden;
+    transition: 0.3s;
+  }
+
+  .sidebar a {
+    font-family: sans-serif;
+  }
+
+  .sidebar code {
+    font-family: sans-serif;
+    background-color: #2b2e38;
+  }
+
+  .sidebar #closeSidebar {
+    position: absolute;
+    top: 0%;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+    text-decoration: none;
+  }
+
+  #openSidebar {
+    position: absolute;
+    top: 0%;
+    left: 0%;
+    margin: 5px;
+    font-size: 4vmax;
+    text-decoration: none;
   }
 
   </style>
