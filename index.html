@@ -44,6 +44,8 @@
   const NO = '⛔';
   var buffer = '1 KEY_B 0;0 0;0\n6 KEY_ZL 0;0 0;0\n41 KEY_ZL;KEY_Y 0;0 0;0\n43 KEY_X;KEY_A 30000;0 0;0\n44 KEY_A 30000;0 0;0\n45 KEY_A 30000;0 0;0\n46 KEY_A 30000;0 0;0\n47 KEY_A 30000;0 0;0';
   var pasteboard = 'NONE 0;0 0;0';
+  var url = window.location.href;
+  var baseUrl = url.split('?')[0].replaceAll('#','');
 
   // Mouse-related variables
   var lButton = false;
@@ -63,54 +65,79 @@
     var main = document.getElementById('main');
     document.getElementById('file-dialog').value = '';
     try {
-    loadHeader();
-    populateTable();
 
-    var sec = 0
+      // Check for url parameters
+      let queries = url.split('?');
+      if (queries.length > 1 && queries[1] != '') {
+        buffer = loadFromQuery();
+      }
+      document.getElementById('reset').href = baseUrl;
 
-    function cycle() {
-      sec = (Number(sec) + .1).toFixed(1);
+      loadHeader();
+      populateTable();
+
+      var sec = 0
+
+      function cycle() {
+        sec = (Number(sec) + .1).toFixed(1);
+
+        fillText(sec);
+      }
 
       fillText(sec);
-    }
+      setInterval(cycle,100);
 
-    fillText(sec);
-    setInterval(cycle,100);
+      // Create listener for tableUpdate
+      const updateEvent = document.querySelector('#apparatus');
+      updateEvent.addEventListener('click', function (e) {
+        try {
+          let cell = e.target.closest('td');
+          if (!cell) {
+            return;
+          }
+          let row = cell.parentElement.rowIndex;
+          let col = cell.cellIndex;
 
-    // Create listener for tableUpdate
-    const updateEvent = document.querySelector('#apparatus');
-    updateEvent.addEventListener('click', function (e) {
-      try {
-        let cell = e.target.closest('td');
-        if (!cell) {
-          return;
+          tableUpdate(row, col, cell);
+        } catch (e) {
+          console.log(e);
+          main.innerHTML += `<h3 style='color:#d11b24;'>${e}</h3>`;
         }
-        let row = cell.parentElement.rowIndex;
-        let col = cell.cellIndex;
+      });
 
-        tableUpdate(row, col, cell);
-      } catch (e) {
-        console.log(e);
-        main.innerHTML += `<h3 style='color:#d11b24;'>${e}</h3>`;
-      }
-    });
-
-    // XY Div
-    function checkInput(e) {
-      var chr = String.fromCharCode(e.which);
-      if ('1234567890-'.indexOf(chr) < 0) {
-        return false;
-    }};
-    let xcoord = document.getElementById('x-coordinate');
-    let ycoord = document.getElementById('y-coordinate');
-    xcoord.onkeypress = checkInput; xcoord.addEventListener('input', inputUpdate);
-    ycoord.onkeypress = checkInput; ycoord.addEventListener('input', inputUpdate);
-    // End of listeners
+      // XY Div
+      function checkInput(e) {
+        var chr = String.fromCharCode(e.which);
+        if ('1234567890-'.indexOf(chr) < 0) {
+          return false;
+      }};
+      let xcoord = document.getElementById('x-coordinate');
+      let ycoord = document.getElementById('y-coordinate');
+      xcoord.onkeypress = checkInput; xcoord.addEventListener('input', inputUpdate);
+      ycoord.onkeypress = checkInput; ycoord.addEventListener('input', inputUpdate);
+      // End of listeners
 
     } catch (e) {
       console.log(e);
       main.innerHTML += `<h3 style='color:#d11b24;'>${e}</h3>`;
     }
+  }
+
+  function loadFromQuery() {
+    let search = new URL(url);
+    let data = search.searchParams.get('buffer');
+    if (data) {
+      buffer = data;
+    }
+    return buffer;
+  }
+
+  function createQuery() {
+    let parameters = [];
+
+    parameters.push(encodeURIComponent('buffer') + '=' + encodeURIComponent(buffer));
+
+    return baseUrl + '?' + parameters.join('&');
   }
 
   function copy(index) {
@@ -524,9 +551,14 @@
         <br><br>
         Built using <a href = 'https://github.com/hamhub7/tas-script/blob/master/lua/lib/nxtas.md' target = '_blank'>nx-TAS</a> by <a href = 'https://github.com/hamhub7' target = '_blank'>hamhub7</a>
         <br><br>
-        <a href = 'https://github.com/MCMi460/TAS-Online' target = '_blank'>See on Github</a>!
+        <a href = 'https://github.com/MCMi460/TAS-Online' style = 'color:#32a852' target = '_blank'>See on Github!</a>
         <br><br><br>
-        <a href = 'javascript:window.location.reload();'>Reset page</a>
+        <a href = '#' onclick = 'navigator.clipboard.writeText(createQuery()); document.getElementById(`shareTitle`).innerHTML = `Link saved to clipboard!`;' style = 'color:#2abdf7' id = 'shareBtn'>
+          <span id = 'shareTitle'>Click to copy link</span>
+          Share progress
+        </a>
+        <br><br>
+        <a href = '' style = 'color:#db0f2b' id = 'reset'>Reset page</a>
       </p>
 
     </div>
@@ -810,7 +842,36 @@
   #confirm-joystick button {
     height: 3vmin;
   }
-  
+
+  #shareBtn {
+    position: relative;
+    display: inline-block;
+  }
+
+  #shareBtn #shareTitle {
+    font-family: sans-serif;
+    text-align: center;
+    max-width: 25vw;
+    min-width: 10vw;
+    bottom: 150%;
+    left: 50%;
+    position: absolute;
+    visibility: hidden;
+    color: #fff;
+    background-color: #3e4547;
+    border-radius: 1.2vmin;
+    padding: .5vmin;
+    z-index: 3;
+    margin-left: -50%;
+    opacity: 0.0;
+    transition: opacity 0.4s;
+  }
+
+  #shareBtn:hover #shareTitle {
+    opacity: 1.0;
+    visibility: visible;
+  }
+
   </style>
   <!-- End of CSS -->
 
