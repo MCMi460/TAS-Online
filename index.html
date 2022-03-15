@@ -125,9 +125,22 @@
 
   function loadFromQuery() {
     let search = new URL(url);
-    let data = search.searchParams.get('buffer');
+    let data = search.searchParams.get('buffer').split('~');
+    let tempBuffer = '';
     if (data) {
-      buffer = data;
+      for (let i = 0; i < data.length; i++) {
+        if (data[i] == '') {
+          continue;
+        }
+        let line = data[i].split('.');
+        let _key = line[1].split('_');
+        let key = [];
+        for (let n = 0; n < _key.length; n++) {
+          key.push(keys[_key[n]]);
+        }
+        tempBuffer += `${line[0]} ${key.join(';')} ${line[2].replaceAll('_',';')} ${line[3].replaceAll('_',';')}\n`
+      }
+      buffer = tempBuffer;
     }
     return buffer;
   }
@@ -135,7 +148,22 @@
   function createQuery() {
     let parameters = [];
 
-    parameters.push(encodeURIComponent('buffer') + '=' + encodeURIComponent(buffer));
+    let tempBuffer = '';
+    let data = buffer.split('\n');
+    for (let i = 0; i < data.length; i++) {
+      if (data == '') {
+        continue;
+      }
+      let line = data[i].split(' ');
+      let _key = line[1].split(';');
+      let key = [];
+      for (let n = 0; n < _key.length; n++) {
+        key.push(`${keys.indexOf(_key[n])}`);
+      }
+      tempBuffer += `${line[0]}.${key.join('_')}.${line[2].replaceAll(';','_')}.${line[3].replaceAll(';','_')}~`;
+    }
+
+    parameters.push(encodeURIComponent('buffer') + '=' + encodeURIComponent(tempBuffer));
 
     return baseUrl + '?' + parameters.join('&');
   }
