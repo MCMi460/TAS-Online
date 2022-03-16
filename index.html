@@ -127,6 +127,7 @@
     let search = new URL(url);
     let data = search.searchParams.get('buffer').split('~');
     let tempBuffer = '';
+    let lastFrame = 0;
     if (data) {
       for (let i = 0; i < data.length; i++) {
         if (data[i] == '') {
@@ -138,7 +139,12 @@
         for (let n = 0; n < _key.length; n++) {
           key.push(keys[_key[n]]);
         }
-        tempBuffer += `${line[0]} ${key.join(';')} ${line[2].replaceAll('_',';')} ${line[3].replaceAll('_',';')}\n`
+        if (!key[0]) {
+          key = ['NONE'];
+        }
+        line[0] = Number(line[0]);
+        tempBuffer += `${line[0] + lastFrame} ${key.join(';')} ${line[2].replaceAll('_',';')} ${line[3].replaceAll('_',';')}\n`
+        lastFrame += line[0];
       }
       buffer = tempBuffer;
     }
@@ -150,6 +156,7 @@
 
     let tempBuffer = '';
     let data = buffer.split('\n');
+    let lastFrame = 0;
     for (let i = 0; i < data.length; i++) {
       if (data == '') {
         continue;
@@ -160,7 +167,16 @@
       for (let n = 0; n < _key.length; n++) {
         key.push(`${keys.indexOf(_key[n])}`);
       }
-      tempBuffer += `${line[0]}.${key.join('_')}.${line[2].replaceAll(';','_')}.${line[3].replaceAll(';','_')}~`;
+      if (key.length == 1 && key[0] == '0') {
+        key = [''];
+      }
+      line[2] = line[2].split(';');
+      if (line[2][0] == '0') {line[2][0] = '';} if (line[2][1] == '0') {line[2][1] = '';}
+      line[3] = line[3].split(';');
+      if (line[3][0] == '0') {line[3][0] = '';} if (line[3][1] == '0') {line[3][1] = '';}
+      line[0] = Number(line[0]);
+      tempBuffer += `${line[0] - lastFrame}.${key.join('_')}.${line[2].join('_')}.${line[3].join('_')}~`;
+      lastFrame = line[0];
     }
 
     parameters.push(encodeURIComponent('buffer') + '=' + encodeURIComponent(tempBuffer));
@@ -450,7 +466,7 @@
   }
 
   function cursorMove(e) {
-    if (!lButton) {
+    if (!lButton && e.buttons != 1) {
       return;
     }
     let joystick = document.getElementById('joystick');
@@ -598,6 +614,7 @@
       <div
         id = 'joystick'
         onmousemove = 'cursorMove(event)'
+        onmousedown = 'cursorMove(event)'
       >
         <div id = 'joystick-x-crosshair'></div>
         <div id = 'joystick-y-crosshair'></div>
