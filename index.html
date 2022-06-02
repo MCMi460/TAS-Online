@@ -49,17 +49,6 @@
   var url = window.location.href;
   var baseUrl = url.split('?')[0].replaceAll('#','');
 
-  // Mouse-related variables
-  var lButton = false;
-
-  function onMouseDown() {
-    lButton = true;
-  } function onMouseUp() {
-    lButton = false;
-  }
-  document.addEventListener('mousedown', onMouseDown);
-  document.addEventListener('mouseup', onMouseUp);
-
   // Important functions
   function setupUI() {
     // Create table columns
@@ -121,7 +110,6 @@
       const funcbox = document.querySelector('#funcbox');
       funcbox.addEventListener('change', (event) => {
         bufferIndex = Number(event.target.value);
-        console.log(bufferIndex);
         populateTable();
       });
       // End of listeners
@@ -514,13 +502,19 @@
   }
 
   function cursorMove(e) {
-    if (!lButton && e.buttons != 1) {
+    if (e.buttons != 1 && e.buttons != undefined) {
       return;
+    }
+    let clientX = e.clientX;
+    let clientY = e.clientY;
+    if (e.buttons == undefined) {
+      clientX = e.touches[0].clientX;
+      clientY = e.touches[0].clientY;
     }
     let joystick = document.getElementById('joystick');
     let radius = 32767;
-    let x = (e.clientX - joystick.offsetLeft - joystick.offsetWidth / 2) * radius / (joystick.offsetWidth / 2);
-    let y = ((e.clientY - joystick.offsetTop - joystick.offsetWidth / 2) * -1) * radius / (joystick.offsetWidth / 2);
+    let x = (clientX - joystick.offsetLeft - joystick.offsetWidth / 2) * radius / (joystick.offsetWidth / 2);
+    let y = ((clientY - joystick.offsetTop - joystick.offsetWidth / 2) * -1) * radius / (joystick.offsetWidth / 2);
     x = x.toFixed(0); y = y.toFixed(0);
     if (!checkBounds(x,y,radius)) {
       return;
@@ -531,8 +525,8 @@
     coords[1].value = `${y}`;
     // Move cursor
     let cursor = document.getElementById('joystick-cursor');
-    cursor.style.left = `calc(${e.clientX}px - 1vmin)`;
-    cursor.style.top = `calc(${e.clientY}px - 1vmin)`;
+    cursor.style.left = `calc(${clientX}px - 1vmin)`;
+    cursor.style.top = `calc(${clientY}px - 1vmin)`;
   }
 
   function inputUpdate() {
@@ -671,6 +665,8 @@
         id = 'joystick'
         onmousemove = 'cursorMove(event)'
         onmousedown = 'cursorMove(event)'
+        ontouchmove = 'cursorMove(event)'
+        ontouchstart = 'cursorMove(event)'
       >
         <div id = 'joystick-x-crosshair'></div>
         <div id = 'joystick-y-crosshair'></div>
@@ -913,6 +909,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    touch-action: none;
   }
 
   #joystick {
