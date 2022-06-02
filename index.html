@@ -42,7 +42,9 @@
   ];
   const YES = '✅';
   const NO = '⛔';
-  var buffer = '1 KEY_B 0;0 0;0\n6 KEY_ZL 0;0 0;0\n41 KEY_ZL;KEY_Y 0;0 0;0\n43 KEY_X;KEY_A 30000;0 0;0\n44 KEY_A 30000;0 0;0\n45 KEY_A 30000;0 0;0\n46 KEY_A 30000;0 0;0\n47 KEY_A 30000;0 0;0';
+  var defaultBuffer = '1 NONE 0;0 0;0';
+  var bufferArray = ['1 KEY_B 0;0 0;0\n6 KEY_ZL 0;0 0;0\n41 KEY_ZL;KEY_Y 0;0 0;0\n43 KEY_X;KEY_A 30000;0 0;0\n44 KEY_A 30000;0 0;0\n45 KEY_A 30000;0 0;0\n46 KEY_A 30000;0 0;0\n47 KEY_A 30000;0 0;0',];
+  var bufferIndex = 0;
   var pasteboard = 'NONE 0;0 0;0';
   var url = window.location.href;
   var baseUrl = url.split('?')[0].replaceAll('#','');
@@ -69,7 +71,7 @@
       // Check for url parameters
       let queries = url.split('?');
       if (queries.length > 1 && queries[1] != '') {
-        buffer = loadFromQuery();
+        bufferArray[bufferIndex] = loadFromQuery();
       }
       document.getElementById('reset').href = baseUrl;
 
@@ -115,6 +117,13 @@
       let ycoord = document.getElementById('y-coordinate');
       xcoord.onkeypress = checkInput; xcoord.addEventListener('input', inputUpdate);
       ycoord.onkeypress = checkInput; ycoord.addEventListener('input', inputUpdate);
+
+      const funcbox = document.querySelector('#funcbox');
+      funcbox.addEventListener('change', (event) => {
+        bufferIndex = Number(event.target.value);
+        console.log(bufferIndex);
+        populateTable();
+      });
       // End of listeners
 
     } catch (e) {
@@ -146,16 +155,16 @@
         tempBuffer += `${line[0] + lastFrame} ${key.join(';')} ${line[2].replaceAll('_',';')} ${line[3].replaceAll('_',';')}\n`
         lastFrame += line[0];
       }
-      buffer = tempBuffer;
+      bufferArray[bufferIndex] = tempBuffer;
     }
-    return buffer;
+    return bufferArray[bufferIndex];
   }
 
   function createQuery() {
     let parameters = [];
 
     let tempBuffer = '';
-    let data = buffer.split('\n');
+    let data = bufferArray[bufferIndex].split('\n');
     let lastFrame = 0;
     for (let i = 0; i < data.length; i++) {
       if (data == '') {
@@ -208,7 +217,7 @@
   }
 
   function paste(frame,data = pasteboard) {
-    let tempBuffer = buffer.split('\n');
+    let tempBuffer = bufferArray[bufferIndex].split('\n');
 
     let possibleFrame = 0;
     for (let i = 0; i < tempBuffer.length; i++) {
@@ -225,7 +234,7 @@
     if (possibleFrame == Number(tempBuffer[tempBuffer.length - 1].split(' ')[0]) + 1 || (tempBuffer.length == 1 && tempBuffer[0] == '') ) {
       tempBuffer.push(`${frame} ${data}`);
     }
-    buffer = tempBuffer.join('\n');
+    bufferArray[bufferIndex] = tempBuffer.join('\n');
 
     // Refill the table
     populateTable();
@@ -269,7 +278,7 @@
 
       var reader = new FileReader();
       reader.onload = function() {
-        buffer = reader.result;
+        bufferArray[bufferIndex] = reader.result;
         populateTable(true);
       };
       reader.readAsText(input.files[0]);
@@ -281,7 +290,7 @@
 
   function downloadBuffer() {
     let elem = document.createElement('a');
-    elem.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(buffer));
+    elem.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(bufferArray[bufferIndex]));
     elem.setAttribute('download', 'script.txt');
 
     elem.style.display = 'none';
@@ -314,7 +323,7 @@
       apparatus.removeChild(apparatus.lastChild);
     }
 
-    const lines = buffer.split('\n');
+    const lines = bufferArray[bufferIndex].split('\n');
     for (let i = 0; i < lines.length; i++) {
       // Create row
       let line = lines[i].split(' ');
@@ -355,7 +364,8 @@
 
       apparatus.appendChild(row);
     }
-    buffer = sortTable();
+    bufferArray[bufferIndex] = sortTable();
+    populateCombo();
     if (newFile) {
       tableUpdate(0,0);
     }
@@ -403,6 +413,44 @@
     return data.join('\n');
   }
 
+  function newBuffer() {
+    bufferArray.push(defaultBuffer);
+    bufferIndex = bufferArray.length - 1;
+
+    // Refill the table
+    populateTable();
+  }
+
+  function delBuffer(index = bufferIndex) {
+    if (bufferArray.length <= 1) {
+      return;
+    }
+    bufferArray.splice(index, 1);
+    if (bufferIndex == index) {
+      bufferIndex = 0;
+    }
+
+    // Refill the table
+    populateTable();
+  }
+
+  function populateCombo() {
+    let comboBox = document.getElementById('funcbox');
+
+    for (let i = comboBox.length - 1; i >= 0; i--) {
+      comboBox.remove(i);
+    }
+
+    for (let n = 0; n < bufferArray.length; n++) {
+      let option = document.createElement('option');
+      option.text = `Table #${n + 1}`;
+      option.value = String(n);
+      comboBox.add(option);
+    }
+
+    comboBox.value = String(bufferIndex);
+  }
+
   function removeRow(row) {
     row = apparatus.children[row];
     apparatus.removeChild(row);
@@ -418,7 +466,7 @@
     let tag = `Buffer updated at ${time} (${sec} seconds of runtime)`;
 
     textarea.title = tag;
-    textarea.innerHTML = '<code>' + buffer.replaceAll('\n','<br>') + `</code><br><br>${tag}`;
+    textarea.innerHTML = '<code>' + bufferArray[bufferIndex].replaceAll('\n','<br>') + `</code><br><br>${tag}`;
   }
 
   function changeKey(row, col) {
@@ -558,7 +606,7 @@
     }
 
     // Sort table, then write the changes
-    buffer = sortTable();
+    bufferArray[bufferIndex] = sortTable();
     // Fill table
     populateTable();
   }
@@ -569,6 +617,14 @@
       width = '25%';
     }
     document.getElementById('sidebar').style.width = width;
+  }
+
+  function funcbar(toggle) {
+    let width = '0%';
+    if (toggle) {
+      width = '40%';
+    }
+    document.getElementById('funcbar').style.width = width;
   }
 
   </script>
@@ -643,6 +699,7 @@
 
       <a href = 'javascript:sidebar(true);' id = 'openSidebar'>&#9776;</a>
       <h1><i>TAS-Online Editor</i></h1>
+      <a href = 'javascript:funcbar(true);' id = 'openFuncbar'>&#60;</a>
 
     </div>
 
@@ -665,6 +722,30 @@
 
         </tr>
       </table>
+    </div>
+
+    <div
+      id = 'funcbar'
+    >
+
+      <a href = 'javascript:funcbar(false);' id = 'closeFuncbar'>
+        &times;
+      </a>
+
+      <select
+        name = 'Function ComboBox'
+        id = 'funcbox'
+      >
+
+      </select>
+
+      <div>
+
+        <button onclick = 'newBuffer();'>New table</button>
+        <button onclick = 'delBuffer();'>Delete table</button>
+
+      </div>
+
     </div>
 
   </body>
@@ -886,6 +967,60 @@
 
   #confirm-joystick button {
     height: 3vmin;
+  }
+
+  #funcbar {
+    font-family: sans-serif;
+    height: 100%;
+    width: 0%;
+    position: fixed;
+    z-index: 1;
+    top: 0%;
+    right: 0%;
+    background-color: #000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow-x: hidden;
+    transition: 0.3s;
+    opacity: 0.9;
+  }
+
+  #openFuncbar {
+    position: absolute;
+    top: 0%;
+    right: 0%;
+    margin: 5px;
+    font-size: 4vmax;
+    text-decoration: none;
+  }
+
+  #funcbar #closeFuncbar {
+    position: absolute;
+    top: 0%;
+    left: 25px;
+    font-size: 36px;
+    margin-right: 50px;
+    text-decoration: none;
+  }
+
+  #funcbar select {
+    font-family: sans-serif;
+    padding: 1vmin;
+    padding-left: 3vmin;
+    width: 80%;
+    text-decoration: none;
+    font-size: 2vmin;
+    color: #fff;
+    background-color: #0033FF;
+    opacity: 1;
+    border: 0;
+    overflow: hidden;
+  }
+
+  #funcbar div {
+    margin: 3vmin;
   }
 
   #shareBtn {
