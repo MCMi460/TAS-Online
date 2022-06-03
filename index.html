@@ -112,6 +112,12 @@
         bufferIndex = Number(event.target.value);
         populateTable();
       });
+
+      document.addEventListener('keydown', e => {
+        if (document.getElementById('joystick-container').style.width == '100%' && ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+          inputUpdate(e);
+        }
+      });
       // End of listeners
 
     } catch (e) {
@@ -529,11 +535,27 @@
     cursor.style.top = `calc(${clientY}px - 1vmin)`;
   }
 
-  function inputUpdate() {
+  function inputUpdate(e = null) {
     let joystick = document.getElementById('joystick');
     let coords = document.getElementById('coords').children;
     let cursor = document.getElementById('joystick-cursor');
     let radius = 32767;
+    if (e) {
+      switch (e.key) {
+        case 'ArrowUp':
+          coords[1].value = String(Number(coords[1].value) + 50);
+          break;
+        case 'ArrowLeft':
+          coords[0].value = String(Number(coords[0].value) - 50);
+          break;
+        case 'ArrowRight':
+          coords[0].value = String(Number(coords[0].value) + 50);
+          break;
+        case 'ArrowDown':
+          coords[1].value = String(Number(coords[1].value) - 50);
+          break;
+      }
+    }
     let x = Number(coords[0].value);
     let y = Number(coords[1].value);
     let clientX = x * (joystick.offsetWidth / 2) / radius + joystick.offsetWidth / 2 + joystick.offsetLeft;
@@ -988,7 +1010,7 @@
     position: absolute;
     top: 0%;
     right: 0%;
-    margin: 5px;
+    margin-right: 1vmin;
     font-size: 4vmax;
     text-decoration: none;
   }
