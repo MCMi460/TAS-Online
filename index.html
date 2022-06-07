@@ -712,7 +712,7 @@
         let startRow = null;
         for (let row = 1; row < apparatus.children.length; row++) {
           let tempFrame = Number(apparatus.children[row].children[0].innerHTML);
-          if (tempFrame >= frame) {
+          if (tempFrame > frame) {
             if (startRow == null) {
               startRow = row;
             }
@@ -737,7 +737,7 @@
   <!-- End of JS -->
 
   <!-- Beginning of HTML -->
-  <body onload='setupUI();'>
+  <body onload = 'setupUI();'>
 
     <div
       id = 'sidebar'
@@ -770,7 +770,7 @@
       <p4>
         Tag 1.1
         <br>
-        Public Beta Build 11w23a
+        Public Beta Build 11w23b
       </p4>
 
     </div>
