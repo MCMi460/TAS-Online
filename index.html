@@ -44,6 +44,7 @@
   const NO = '⛔';
   var defaultBuffer = '1 NONE 0;0 0;0';
   var bufferArray = ['1 KEY_B 0;0 0;0\n6 KEY_ZL 0;0 0;0\n41 KEY_ZL;KEY_Y 0;0 0;0\n43 KEY_X;KEY_A 30000;0 0;0\n44 KEY_A 30000;0 0;0\n45 KEY_A 30000;0 0;0\n46 KEY_A 30000;0 0;0\n47 KEY_A 30000;0 0;0',];
+  var bufferTitles = ['Main Script',];
   var bufferIndex = 0;
   var pasteboard = 'NONE 0;0 0;0';
   var url = window.location.href;
@@ -282,17 +283,20 @@
     }
   }
 
-  function downloadBuffer() {
-    let elem = document.createElement('a');
-    elem.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(bufferArray[bufferIndex]));
-    elem.setAttribute('download', 'script.txt');
+  function downloadBuffer() { /* Although the function name implies it only downloads one buffer,
+    recent updates have changed its functionality to include the entire buffer array */
+    for (let i = 0; i < bufferArray.length; i++) {
+      let elem = document.createElement('a');
+      elem.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(bufferArray[i]));
+      elem.setAttribute('download', bufferTitles[i] + '.txt');
 
-    elem.style.display = 'none';
-    document.body.appendChild(elem);
+      elem.style.display = 'none';
+      document.body.appendChild(elem);
 
-    elem.click();
+      elem.click();
 
-    document.body.removeChild(elem);
+      document.body.removeChild(elem);
+    }
   }
 
   function loadHeader() {
@@ -408,7 +412,16 @@
   }
 
   function newBuffer() {
+    let title = window.prompt('What would you like to name this script?', '');
+    if (!title) {
+      return;
+    }
+    if (bufferTitles.includes(title)) {
+      window.alert('That script name is already taken!');
+      return;
+    }
     bufferArray.push(defaultBuffer);
+    bufferTitles.push(title);
     bufferIndex = bufferArray.length - 1;
 
     // Refill the table
@@ -416,12 +429,18 @@
   }
 
   function delBuffer(index = bufferIndex) {
-    if (bufferArray.length <= 1) {
+    if (!window.confirm('Are you sure you want to delete the current script?')) {
       return;
+    } else {
+      bufferArray.splice(index, 1);
+      bufferTitles.splice(index, 1);
+      if (bufferIndex != 0) {
+        bufferIndex--;
+      }
     }
-    bufferArray.splice(index, 1);
-    if (bufferIndex == index) {
-      bufferIndex = 0;
+    if (bufferArray.length <= 0) {
+      bufferArray = [defaultBuffer,];
+      bufferTitles = ['Main Script',];
     }
 
     // Refill the table
@@ -437,7 +456,7 @@
 
     for (let n = 0; n < bufferArray.length; n++) {
       let option = document.createElement('option');
-      option.text = `Table #${n + 1}`;
+      option.text = bufferTitles[n];
       option.value = String(n);
       comboBox.add(option);
     }
@@ -643,6 +662,62 @@
     document.getElementById('funcbar').style.width = width;
   }
 
+  function importBuffer() {
+    let defaultN = 0;
+    if (bufferArray.length > 1) {
+      defaultN = 0;
+      if (defaultN == bufferIndex) {
+        defaultN++;
+      }
+    }
+    let response = window.prompt('Which script should be imported?', bufferTitles[defaultN]);
+    if (!response) {
+      return;
+    }
+    if (!bufferTitles.includes(response)) {
+      window.alert('That\'s not a valid script!');
+      return;
+    }
+    if (response == bufferTitles[bufferIndex] && !window.confirm('Are you sure you want to import a script into itself?')) {
+      return;
+    }
+    response = bufferTitles.indexOf(response);
+    let frame = apparatus.children[apparatus.children.length - 1].children[0].innerHTML;
+    if (apparatus.children.length <= 1) {
+      frame = 0;
+    }
+    frame = Number(frame);
+    let prompt = window.prompt('After which frame should this script be imported?', frame);
+    if (prompt) {
+      frame = Number(prompt);
+      if (Number.isInteger(frame)) {
+        let array = bufferArray[response].split('\n');
+        let totalFrames = Number(array[array.length - 1].split(' ')[0]);
+        let copyArray = [];
+        let startRow = null;
+        for (let row = 1; row < apparatus.children.length; row++) {
+          let tempFrame = Number(apparatus.children[row].children[0].innerHTML);
+          if (tempFrame >= frame) {
+            if (startRow == null) {
+              startRow = row;
+            }
+            copy(row);
+            copyArray.push([tempFrame + totalFrames, pasteboard]);
+          }
+        }
+        for (i of copyArray) {
+          removeRow(startRow);
+          paste(i[0], i[1]);
+        }
+        for (line of array) {
+          line = line.split(' ');
+          paste(frame + Number(line[0]), `${line[1]} ${line[2]} ${line[3]}`);
+        }
+      }
+      populateTable();
+    }
+  }
+
   </script>
   <!-- End of JS -->
 
@@ -759,8 +834,14 @@
 
       <div>
 
-        <button onclick = 'newBuffer();'>New table</button>
-        <button onclick = 'delBuffer();'>Delete table</button>
+        <button onclick = 'newBuffer();'>New script</button>
+        <button onclick = 'delBuffer();'>Delete script</button>
+
+      </div>
+
+      <div>
+
+        <button onclick = 'importBuffer();'>Import script into current script</button>
 
       </div>
 
@@ -1032,14 +1113,14 @@
     text-decoration: none;
     font-size: 2vmin;
     color: #fff;
-    background-color: #0033FF;
+    background-color: #282c2e;
     opacity: 1;
     border: 0;
     overflow: hidden;
   }
 
   #funcbar div {
-    margin: 3vmin;
+    margin-top: 3vmin;
   }
 
   #shareBtn {
