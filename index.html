@@ -42,15 +42,11 @@
       id = 'sidebar'
       class = 'sidebar'
     >
-
       <a href = 'javascript:sidebar(false);' id = 'closeSidebar'>
         &times;
       </a>
-
       <p>
-
       </p>
-
       <p>
         Created and designed by <a href = 'https://github.com/MCMi460' target = '_blank'>Deltaion Lee (MCMi460)</a>
         <br><br>
@@ -65,21 +61,16 @@
         <br><br>
         <a href = '' style = 'color:#db0f2b' id = 'reset'>Reset page</a>
       </p>
-
-      <p4>
+      <p class="version">
         Tag 1.1
         <br>
         Public Beta Build 11w23b
-      </p4>
-
+      </p>
     </div>
 
-    <div
-      id = 'joystick-container'
-    >
+    <div id = 'joystick-container'>
 
-      <div
-        id = 'joystick'
+      <div id = 'joystick'
         onmousemove = 'cursorMove(event)'
         onmousedown = 'cursorMove(event)'
         ontouchmove = 'cursorMove(event)'
@@ -90,84 +81,54 @@
         <div id = 'joystick-cursor'></div>
       </div>
 
-      <div
-        id = 'coords'
-      >
+      <div id = 'coords'>
         <!-- Coords go here -->
         <input type = 'number' id = 'x-coordinate' name = 'X-Value' min = '-32767' max = '32767' value = '0'>
         <input type = 'number' id = 'y-coordinate' name = 'Y-Value' min = '-32767' max = '32767' value = '0'>
       </div>
 
-      <div
-        id = 'confirm-joystick'
-      >
+      <div id = 'confirm-joystick'>
         <button onclick = 'changeStick(0,0);'>Confirm Changes</button>
       </div>
 
     </div>
 
-    <div
-      id = 'banner'
-    >
-
+    <div id = 'banner'>
       <a href = 'javascript:sidebar(true);' id = 'openSidebar'>&#9776;</a>
       <h1><i>TAS-Online Editor</i></h1>
       <a href = 'javascript:funcbar(true);' id = 'openFuncbar'>&#60;</a>
-
     </div>
 
-    <div
-      id = 'main'
-    >
-
-    <input type = 'file' id = 'file-dialog' accept = 'text/plain' onchange = 'readFile(event);'>
-    <button onclick = 'downloadBuffer();'>Save progress</button>
-    <button onclick = 'newFrame();'>Add Frame</button>
-    <button onclick = 'delFrame();'>Remove Frame</button>
-
+    <div id = 'main'>
+      <input type = 'file' id = 'file-dialog' accept = 'text/plain' onchange = 'readFile(event);'>
+      <button onclick = 'downloadBuffer();'>Save progress</button>
+      <button onclick = 'newFrame();'>Add Frame</button>
+      <button onclick = 'delFrame();'>Remove Frame</button>
     </div>
 
-    <div
-      id = 'apparatus-container'
-    >
+    <div id = 'apparatus-container'>
       <table id = 'apparatus'>
         <tr id = 'header'>
-
         </tr>
       </table>
     </div>
 
-    <div
-      id = 'funcbar'
-    >
+    <div id = 'funcbar'>
 
       <a href = 'javascript:funcbar(false);' id = 'closeFuncbar'>
         &times;
       </a>
 
-      <select
-        name = 'Function ComboBox'
-        id = 'funcbox'
-      >
-
-      </select>
+      <select name = 'Function ComboBox' id = 'funcbox'></select>
 
       <div>
-
         <button onclick = 'newBuffer();'>New script</button>
         <button onclick = 'delBuffer();'>Delete script</button>
-
       </div>
 
       <div>
-
         <button onclick = 'importBuffer();'>Import script into current script</button>
-
       </div>
-
     </div>
-
   </body>
-  <!-- End of HTML -->
-
 </html>
