@@ -32,7 +32,7 @@
   function setupUI() {
     // Create table columns
     var apparatus = document.getElementById('apparatus');
-    var main = document.getElementById('main');
+    main = document.querySelector(".main");
     document.getElementById('file-dialog').value = '';
     try {
 
@@ -632,9 +632,9 @@
 
   function sidebar(toggle, name) {
     if (toggle) {
-      document.querySelector('.' + name).setAttribute("id", "open");
+      document.querySelector('.' + name).classList.add("open");
     } else {
-      document.querySelector('.' + name).removeAttribute("id", "open");
+      document.querySelector('.' + name).classList.remove("open");
     }
   }
 

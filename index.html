@@ -34,7 +34,6 @@
     <script src="script/script.js"></script>
   </head>
   <body onload = 'setupUI();'>
-
     <div class = 'sidebar'>
       <a href = 'javascript:sidebar(false, "sidebar");' id = 'closeSidebar'>
         &times;
@@ -88,7 +87,6 @@
       <div id = 'confirm-joystick'>
         <button onclick = 'changeStick(0,0);'>Confirm Changes</button>
       </div>
-
     </div>
 
     <div class = 'banner'>
@@ -97,7 +95,7 @@
       <a href = 'javascript:sidebar(true, "funcbar");' id = 'openFuncbar'>&#60;</a>
     </div>
 
-    <div id = 'main'>
+    <div class = 'main'>
       <input type = 'file' id = 'file-dialog' accept = 'text/plain' onchange = 'readFile(event);'>
       <button onclick = 'downloadBuffer();'>Save progress</button>
       <button onclick = 'newFrame();'>Add Frame</button>

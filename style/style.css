@@ -23,6 +23,10 @@ body {
   --sidebar-open: width 300ms;
 }
 
+div.open {
+  width: var(--sidebar-width);
+}
+
 .banner {
   min-height: 10vh;
   display: flex;
@@ -43,6 +47,7 @@ body {
 }
 
 .sidebar {
+  --sidebar-width: 25%;
   height: 100%;
   width: 0;
   position: fixed;
@@ -59,8 +64,7 @@ body {
   font-size: 1.5vmin;
   padding: 1em 0;
 }
-.sidebar#open {
-  width: 25%;
+.sidebar.open {
   padding-left: 2em;
 }
 .sidebar > div {
@@ -74,7 +78,7 @@ body {
 
 #openSidebar {
   position: absolute;
-  top: -0.75vmax;
+  top: -13px;
   left: 0;
   margin: 5px;
   font-size: 4vmax;
@@ -153,7 +157,7 @@ button:hover, td:hover {
           user-select: none;
 }
 
-#main {
+.main {
   max-width: 40em;
   display: flex;
   flex-direction: row;
@@ -221,6 +225,7 @@ button:hover, td:hover {
 }
 
 .funcbar {
+  --sidebar-width: 40%;
   height: 100%;
   width: 0;
   position: fixed;
@@ -235,9 +240,6 @@ button:hover, td:hover {
   overflow-x: hidden;
   transition: var(--sidebar-open);
   opacity: 0.9;
-}
-.funcbar#open {
-  width: 40%;
 }
 .funcbar select {
   padding: 1vmin;
