@@ -85,7 +85,13 @@ h1 {
   margin-bottom: 3vmin;
 }
 
-table, th, td {
+table, td, th {
+  border-spacing: 5px;
+  border: 2px solid;
+  border-color: #aa1bd1 #1e90ff;
+}
+
+table {
   font-size: 2vmin;
   overflow: hidden;
   table-layout: fixed;
@@ -93,9 +99,10 @@ table, th, td {
   background-color: #2b2e38;
   width: 98%;
   max-height: 90%;
-  border-spacing: 5px;
-  border: 2px solid;
-  border-color: #aa1bd1 #1e90ff;
+}
+
+td {
+  cursor: pointer;
 }
 
 input {

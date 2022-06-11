@@ -282,14 +282,13 @@
     columns.push(...keys);
     columns.shift();
     columns.unshift('Frame','L-Stick','R-Stick');
-    const header = apparatus.querySelector('#header');
     for (let i = 0; i < columns.length; i++)  {
-      let td = document.createElement('td');
+      let td = document.createElement('th');
       let text = columns[i];
       if (i > 2) {
         text = text.substring(4);
       }
-      td.innerHTML = text; td.title = text; td.className = 'header';
+      td.innerHTML = text; td.title = text;
       header.appendChild(td);
     }
   }
