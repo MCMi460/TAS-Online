@@ -39,7 +39,7 @@
   <body onload = 'setupUI();'>
 
     <div class = 'sidebar'>
-      <a href = 'javascript:sidebar(false);' id = 'closeSidebar'>
+      <a href = 'javascript:sidebar(false, "sidebar");' id = 'closeSidebar'>
         &times;
       </a>
       <p id="script">
@@ -95,9 +95,9 @@
     </div>
 
     <div id = 'banner'>
-      <a href = 'javascript:sidebar(true);' id = 'openSidebar'>&#9776;</a>
+      <a href = 'javascript:sidebar(true, "sidebar");' id = 'openSidebar'>&#9776;</a>
       <h1>TAS-Online Editor</h1>
-      <a href = 'javascript:funcbar(true);' id = 'openFuncbar'>&#60;</a>
+      <a href = 'javascript:sidebar(true, "funcbar");' id = 'openFuncbar'>&#60;</a>
     </div>
 
     <div id = 'main'>
@@ -111,8 +111,8 @@
       <tr id = 'header'></tr>
     </table>
 
-    <div id = 'funcbar'>
-      <a href = 'javascript:funcbar(false);' id = 'closeFuncbar'>
+    <div class = 'funcbar'>
+      <a href = 'javascript:sidebar(false, "funcbar");' id = 'closeFuncbar'>
         &times;
       </a>
       <select name = 'Function ComboBox' id = 'funcbox'></select>

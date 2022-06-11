@@ -623,20 +623,12 @@
     populateTable();
   }
 
-  function sidebar(toggle) {
+  function sidebar(toggle, name) {
     if (toggle) {
-      document.querySelector('.sidebar').setAttribute("id", "open");
+      document.querySelector('.' + name).setAttribute("id", "open");
     } else {
-      document.querySelector('.sidebar').removeAttribute("id", "open");
+      document.querySelector('.' + name).removeAttribute("id", "open");
     }
-  }
-
-  function funcbar(toggle) {
-    let width = '0%';
-    if (toggle) {
-      width = '40%';
-    }
-    document.getElementById('funcbar').style.width = width;
   }
 
   function importBuffer() {
