@@ -3,7 +3,7 @@
   src: url("../assets/moon_get-Heavy.otf");
 }
 * {
-  color: #fff;
+  color: #ddd;
   font-family: sans-serif;
 }
 
@@ -97,7 +97,7 @@ body {
 table, td, th {
   border-spacing: 5px;
   border: 2px solid;
-  border-color: #aa1bd1 #1e90ff;
+  border-color: var(--color-purple) var(--color-blue);
 }
 
 table {
@@ -105,7 +105,7 @@ table {
   overflow: hidden;
   table-layout: fixed;
   text-align: center;
-  background-color: #2b2e38;
+  background-color: var(--color-button);
   width: 98%;
   max-height: 90%;
 }
