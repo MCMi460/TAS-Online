@@ -42,7 +42,7 @@
       <a href = 'javascript:sidebar(false);' id = 'closeSidebar'>
         &times;
       </a>
-      <p>
+      <p id="script">
       </p>
       <div>
         <p>
@@ -71,15 +71,14 @@
     </div>
 
     <div id = 'joystick-container'>
-
       <div id = 'joystick'
         onmousemove = 'cursorMove(event)'
         onmousedown = 'cursorMove(event)'
         ontouchmove = 'cursorMove(event)'
         ontouchstart = 'cursorMove(event)'
       >
-        <div id = 'joystick-x-crosshair'></div>
-        <div id = 'joystick-y-crosshair'></div>
+        <div id = 'joystick-x-crosshair' class="joystick-crosshair"></div>
+        <div id = 'joystick-y-crosshair' class="joystick-crosshair"></div>
         <div id = 'joystick-cursor'></div>
       </div>
 

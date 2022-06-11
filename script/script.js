@@ -449,7 +449,7 @@
   }
 
   function fillText(sec = 0) {
-    let textarea = document.querySelector('.sidebar').children[1];
+    let textarea = document.getElementById("script");
 
     let date = new Date();
     let time = date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();

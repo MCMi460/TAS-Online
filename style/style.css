@@ -12,6 +12,16 @@ body {
   background-color: #242222;
 }
 
+:root {
+  --color-button: #2b2e38;
+  --color-grey-dark: #18191c;
+  --color-joystick-background: #59504f;
+  --color-purple: #aa1bd1;
+  --color-blue: #1e90ff;
+  --joystick-size: 80vmin;
+  --joystick-cursor-size: 2vmin;
+}
+
 h1, #openFuncbar, #openSidebar {
   font-family: "moon_get", sans-serif;
 }
@@ -105,6 +115,22 @@ td {
   cursor: pointer;
 }
 
+button, input {
+  font-size: 2vmin;
+  overflow: hidden;
+  text-align: center;
+  padding: 0.3em;
+  border: 2px solid var(--color-purple);
+  border-radius: 5px;
+  min-height: -webkit-fit-content;
+  min-height: -moz-fit-content;
+  min-height: fit-content;
+}
+
+#file-dialog {
+  cursor: pointer;
+}
+
 input {
   font-size: 2vmin;
   overflow: hidden;
@@ -112,16 +138,13 @@ input {
 }
 
 button {
-  font-size: 2vmin;
-  overflow: hidden;
-  text-align: center;
-  padding: 0.3em;
-  border: 2px solid #dc143c;
-  background-color: #2b2e38;
-  border-radius: 5px;
-  min-height: -webkit-fit-content;
-  min-height: -moz-fit-content;
-  min-height: fit-content;
+  cursor: pointer;
+  color: white;
+  background-color: var(--color-button);
+}
+
+button:hover, td:hover {
+  background-color: var(--color-grey-dark);
 }
 
 .header, .key {
@@ -137,7 +160,7 @@ button {
   flex-direction: column;
   align-items: center;
   font-size: calc(10px + 1vmin);
-  background-color: #18191c;
+  background-color: var(--color-grey-dark);
 }
 
 #main {
@@ -168,47 +191,36 @@ button {
 }
 
 #joystick {
-  width: 80vh;
-  height: 80vh;
+  width: var(--joystick-size);
+  height: var(--joystick-size);
   border: 1vmin solid #c3c3c3;
-  border-radius: 100%;
-  background-color: #59504f;
+  border-radius: 50%;
+  background-color: var(--color-joystick-background);
   opacity: 1;
 }
 
-#joystick-x-crosshair {
-  background-color: #1d2024;
+.joystick-crosshair {
+  background-color: var(--color-grey-dark);
   display: none;
-  position: fixed;
-  width: 80vh;
+  width: var(--joystick-size);
   height: 1vh;
-  top: calc(50% - 4vh);
-  left: calc(50% - 40vh);
-  /* inconsistent */
   z-index: 2;
+  position: relative;
+  top: calc(var(--joystick-size) / 2 - 0.5vmin);
+  left: calc(50% - var(--joystick-size) / 2);
 }
 
 #joystick-y-crosshair {
-  background-color: #1d2024;
-  display: none;
-  position: fixed;
-  width: 1vh;
-  height: 80vh;
-  top: calc(50% - 40vh - 3.5vmin);
-  /* inconsistent */
-  left: calc(50% - 0.5vh);
-  z-index: 2;
+  transform: rotate(90deg);
 }
 
 #joystick-cursor {
   display: none;
-  width: 2vmin;
-  height: 2vmin;
-  border-radius: 100%;
-  background-color: #f71d05;
+  width: var(--joystick-cursor-size);
+  height: var(--joystick-cursor-size);
+  border-radius: 50%;
+  background-color: var(--color-purple);
   position: fixed;
-  top: calc(50% - 1vmin);
-  left: calc(50% - 1vmin);
   z-index: 3;
 }
 
