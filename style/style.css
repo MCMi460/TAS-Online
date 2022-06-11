@@ -59,13 +59,12 @@ body {
   font-size: 1.5vmin;
   padding: 1em 0;
 }
-.sidebar > div {
-  margin-top: 5em;
-}
-
 .sidebar#open {
   width: 25%;
   padding-left: 2em;
+}
+.sidebar > div {
+  margin-top: 5em;
 }
 
 .version {
@@ -201,9 +200,8 @@ button:hover, td:hover {
   top: calc(var(--joystick-size) / 2 - 0.5vmin);
   left: calc(50% - var(--joystick-size) / 2);
 }
-
-#joystick-y-crosshair {
-  transform: rotate(90deg);
+.joystick-crosshair.y {
+  transform: rotate(90deg) translateX(-1vmin);
 }
 
 #joystick-cursor {
@@ -239,7 +237,6 @@ button:hover, td:hover {
   transition: var(--sidebar-open);
   opacity: 0.9;
 }
-
 .funcbar#open {
   width: 40%;
   padding-right: 2em;

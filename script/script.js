@@ -93,8 +93,13 @@
       });
 
       document.addEventListener('keydown', e => {
-        if (document.getElementById('joystick-container').style.width == '100%' && ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
-          inputUpdate(e);
+        if (document.querySelector('.joystick-container').style.width == '100%') {
+          if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+            inputUpdate(e);
+          }
+          if (e.key == 'Escape') {
+            closeJoystick();
+          }
         }
       });
       // End of listeners
@@ -567,10 +572,9 @@
   }
 
   function changeStick(row, col) {
-    let container = document.getElementById('joystick-container');
+    let container = document.querySelector('.joystick-container');
     let cursor = document.getElementById('joystick-cursor');
-    let xCrosshair = document.getElementById('joystick-x-crosshair');
-    let yCrosshair = document.getElementById('joystick-y-crosshair');
+    let crosshairs = document.querySelectorAll('.joystick-crosshair');
     if (row == 0 && col == 0) {
       // Get coordinates to write
       let x = document.getElementById('x-coordinate').value;
@@ -585,23 +589,25 @@
       container.title = '';
 
       // Close joystick-related elements
-      container.style.width = '0%';
-      cursor.style.display = 'none';
-      xCrosshair.style.display = 'none';
-      yCrosshair.style.display = 'none';
-
-      tableUpdate(0,0);
+      closeJoystick()
       return;
     }
     container.style.width = '100%';
     container.title = `${row}, ${col}`;
     cursor.style.display = 'block';
-    xCrosshair.style.display = 'block';
-    yCrosshair.style.display = 'block';
+    crosshairs.forEach(crosshair => {crosshair.style.display = 'block';})
     let [x,y] = apparatus.children[row].children[col].innerHTML.split(',').map(Number);
     document.getElementById('x-coordinate').value = `${x}`;
     document.getElementById('y-coordinate').value = `${y}`;
     inputUpdate();
+  }
+
+  function closeJoystick() {
+    document.querySelector('.joystick-container').style.width = '0%';
+    document.getElementById('joystick-cursor').style.display = 'none';
+    document.querySelectorAll('.joystick-crosshair').forEach(crosshair => {crosshair.style.display = 'none';})
+
+    tableUpdate(0,0);
   }
 
   // Events

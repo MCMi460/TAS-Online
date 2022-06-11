@@ -18,7 +18,6 @@
 <html>
   <head>
     <meta charset = 'utf-8'>
-
     <!-- Some cosmetics -->
     <link rel = 'shortcut icon' href = './static/images/smotas.png' />
     <meta name = 'author' content = 'MCMi460'>
@@ -34,8 +33,6 @@
     <link rel="stylesheet" href="style/style.css">
     <script src="script/script.js"></script>
   </head>
-
-  <!-- Beginning of HTML -->
   <body onload = 'setupUI();'>
 
     <div class = 'sidebar'>
@@ -57,7 +54,7 @@
         <p>
           <a href = '#' onclick = 'navigator.clipboard.writeText(createQuery()); document.getElementById(`shareTitle`).innerHTML = `Link saved to clipboard!`;' style = 'color:#2abdf7' id = 'shareBtn'>
           <span id = 'shareTitle'>Click to copy link</span>
-            Share progress</a>
+            Share Progress</a>
         </p>
         <p>
           <a href = '' style = 'color:#db0f2b' id = 'reset'>Reset Page</a>
@@ -77,8 +74,8 @@
         ontouchmove = 'cursorMove(event)'
         ontouchstart = 'cursorMove(event)'
       >
-        <div id = 'joystick-x-crosshair' class="joystick-crosshair"></div>
-        <div id = 'joystick-y-crosshair' class="joystick-crosshair"></div>
+        <div class="joystick-crosshair x"></div>
+        <div class="joystick-crosshair y"></div>
         <div id = 'joystick-cursor'></div>
       </div>
 
