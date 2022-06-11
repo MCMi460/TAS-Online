@@ -450,7 +450,7 @@
   }
 
   function fillText(sec = 0) {
-    let textarea = document.getElementById('sidebar').children[1];
+    let textarea = document.querySelector('.sidebar').children[1];
 
     let date = new Date();
     let time = date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
@@ -625,11 +625,11 @@
   }
 
   function sidebar(toggle) {
-    let width = '0%';
     if (toggle) {
-      width = '25%';
+      document.querySelector('.sidebar').setAttribute("id", "open");
+    } else {
+      document.querySelector('.sidebar').removeAttribute("id", "open");
     }
-    document.getElementById('sidebar').style.width = width;
   }
 
   function funcbar(toggle) {
