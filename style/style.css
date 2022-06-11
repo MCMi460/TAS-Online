@@ -107,7 +107,6 @@ table {
   text-align: center;
   background-color: var(--color-button);
   width: 98%;
-  max-height: 90%;
 }
 
 td {
@@ -239,7 +238,24 @@ button:hover, td:hover {
 }
 .funcbar#open {
   width: 40%;
-  padding-right: 2em;
+}
+.funcbar select {
+  padding: 1vmin;
+  padding-left: 3vmin;
+  width: 80%;
+  text-decoration: none;
+  font-size: 2vmin;
+  background-color: #282c2e;
+  opacity: 1;
+  border: 0;
+  overflow: hidden;
+}
+.funcbar > div {
+  margin: 3vmin 0 1vmin;
+  max-width: 500px;
+}
+.funcbar button {
+  margin: 0 3px;
 }
 
 #openFuncbar {
@@ -251,30 +267,13 @@ button:hover, td:hover {
   text-decoration: none;
 }
 
-.funcbar #closeFuncbar {
+#closeFuncbar {
   position: absolute;
   top: 0;
   left: 25px;
   font-size: 36px;
   margin-right: 50px;
   text-decoration: none;
-}
-
-.funcbar select {
-  padding: 1vmin;
-  padding-left: 3vmin;
-  width: 80%;
-  text-decoration: none;
-  font-size: 2vmin;
-  color: #fff;
-  background-color: #282c2e;
-  opacity: 1;
-  border: 0;
-  overflow: hidden;
-}
-
-.funcbar div {
-  margin-top: 3vmin;
 }
 
 #shareBtn {

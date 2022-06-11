@@ -85,6 +85,7 @@
       let ycoord = document.getElementById('y-coordinate');
       xcoord.onkeypress = checkInput; xcoord.addEventListener('input', inputUpdate);
       ycoord.onkeypress = checkInput; ycoord.addEventListener('input', inputUpdate);
+      //onkeypress is deprecated, should be replaced
 
       const funcbox = document.querySelector('#funcbox');
       funcbox.addEventListener('change', (event) => {
