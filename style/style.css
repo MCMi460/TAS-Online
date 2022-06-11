@@ -84,15 +84,8 @@ h1 {
   text-decoration: none;
 }
 
-#apparatus-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  overflow: auto;
-  height: 90%;
-  margin-top: 2vmin;
-  margin-bottom: 3vmin;
+#apparatus {
+  margin: 2vmin auto;
 }
 
 table, td, th {
@@ -113,6 +106,7 @@ table {
 
 td {
   cursor: pointer;
+  overflow: hidden;
 }
 
 button, input {
@@ -164,13 +158,13 @@ button:hover, td:hover {
 }
 
 #main {
-  max-height: 90vh;
+  max-width: 40em;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-evenly;
   font-size: calc(10px + 1vmin);
-  margin-top: 2vmin;
+  margin: 2vmin auto;
 }
 
 #joystick-container {
