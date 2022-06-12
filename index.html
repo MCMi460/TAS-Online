@@ -17,105 +17,151 @@
 -->
 <html>
   <head>
-    <meta charset = 'utf-8'>
+    <meta charset="utf-8" />
     <!-- Some cosmetics -->
-    <link rel = 'shortcut icon' href = './static/images/smotas.png' />
-    <meta name = 'author' content = 'MCMi460'>
-    <meta name = 'og:description' content = 'An online Nintendo Switch TAS-ing tool designed for your comfort of use!'>
-    <meta name = 'keywords' content = 'TAS, Nintendo Switch, Super Mario Odyssey, Development, Tool'>
-    <meta name = 'theme-color' content = '#f018cf'>
-    <meta property = 'og:site_name' content = 'Deltaion Lee' />
-    <meta property = 'og:title' content = 'TAS-Online' />
-    <meta property = 'og:image' content = '/static/images/smotas.png' />
-    <meta property = 'og:image:type' content = 'image/png' />
+    <link rel="shortcut icon" href="./static/images/smotas.png" />
+    <meta name="author" content="MCMi460" />
+    <meta
+      name="og:description"
+      content="An online Nintendo Switch TAS-ing tool designed for your comfort of use!"
+    />
+    <meta
+      name="keywords"
+      content="TAS, Nintendo Switch, Super Mario Odyssey, Development, Tool"
+    />
+    <meta name="theme-color" content="#f018cf" />
+    <meta property="og:site_name" content="Deltaion Lee" />
+    <meta property="og:title" content="TAS-Online" />
+    <meta property="og:image" content="/static/images/smotas.png" />
+    <meta property="og:image:type" content="image/png" />
 
     <title>TAS-Online</title>
-    <link rel="stylesheet" href="style/style.css">
+    <link rel="stylesheet" href="style/style.css" />
     <script src="script/script.js"></script>
   </head>
-  <body onload = 'setupUI();'>
-    <div class = 'sidebar'>
-      <a href = 'javascript:sidebar(false, "sidebar");' class = 'close'>
+  <body onload="setupUI();">
+    <div class="sidebar">
+      <a href='javascript:sidebar(false, "sidebar");' class="close">
         &times;
       </a>
-      <p id="script">
-      </p>
+      <p id="script"></p>
       <div>
         <p>
-          Created and designed by <a href = 'https://github.com/MCMi460' target = '_blank'>Deltaion Lee (MCMi460)</a>
+          Created and designed by
+          <a href="https://github.com/MCMi460" target="_blank"
+            >Deltaion Lee (MCMi460)</a
+          >
         </p>
         <p>
-          Built using <a href = 'https://github.com/hamhub7/tas-script/blob/master/lua/lib/nxtas.md' target = '_blank'>nx-TAS</a> by <a href = 'https://github.com/hamhub7' target = '_blank'>hamhub7</a>
+          Built using
+          <a
+            href="https://github.com/hamhub7/tas-script/blob/master/lua/lib/nxtas.md"
+            target="_blank"
+            >nx-TAS</a
+          >
+          by <a href="https://github.com/hamhub7" target="_blank">hamhub7</a>
         </p>
         <p>
-          <a href = 'https://github.com/MCMi460/TAS-Online' style = 'color:#49d16d' target = '_blank'>See on Github!</a>
+          <a
+            href="https://github.com/MCMi460/TAS-Online"
+            style="color: #49d16d"
+            target="_blank"
+            >See on Github!</a
+          >
         </p>
         <p>
-          <a href = '#' onclick = 'share()' style = 'color:#2abdf7' class = 'shareBtn'>
-          <span class = 'shareTitle'>Click to copy link</span>
-            Share Progress</a>
+          <a href="#" onclick="share()" style="color: #2abdf7" class="shareBtn">
+            <span class="shareTitle">Click to copy link</span>
+            Share Progress</a
+          >
         </p>
         <p>
-          <a href = '' style = 'color:#e2394f' id = 'reset'>Reset Page</a>
+          <a href="" style="color: #e2394f" id="reset">Reset Page</a>
         </p>
       </div>
-      <p class = "version">
+      <p class="version">
         Tag 1.1
-        <br>
+        <br />
         Public Beta Build 11w23b
       </p>
     </div>
 
-    <div class = 'joystick-container'>
-      <div id = 'joystick'
-        onmousemove = 'cursorMove(event)'
-        onmousedown = 'cursorMove(event)'
-        ontouchmove = 'cursorMove(event)'
-        ontouchstart = 'cursorMove(event)'
+    <div class="joystick-container">
+      <div
+        id="joystick"
+        onmousemove="cursorMove(event)"
+        onmousedown="cursorMove(event)"
+        ontouchmove="cursorMove(event)"
+        ontouchstart="cursorMove(event)"
       >
         <div class="joystick-crosshair x"></div>
         <div class="joystick-crosshair y"></div>
-        <div id = 'joystick-cursor'></div>
+        <div id="joystick-cursor"></div>
       </div>
 
-      <div id = 'coords'>
+      <div id="coords">
         <!-- Coords go here -->
-        <input type = 'number' id = 'x-coordinate' name = 'X-Value' min = '-32767' max = '32767' value = '0'>
-        <input type = 'number' id = 'y-coordinate' name = 'Y-Value' min = '-32767' max = '32767' value = '0'>
+        <input
+          type="number"
+          id="x-coordinate"
+          name="X-Value"
+          min="-32767"
+          max="32767"
+          value="0"
+        />
+        <input
+          type="number"
+          id="y-coordinate"
+          name="Y-Value"
+          min="-32767"
+          max="32767"
+          value="0"
+        />
       </div>
 
-      <div id = 'confirm-joystick'>
-        <button onclick = 'changeStick(0,0);'>Confirm Changes</button>
+      <div id="confirm-joystick">
+        <button onclick="changeStick(0,0);">Confirm Changes</button>
       </div>
     </div>
 
-    <div class = 'banner'>
-      <a href = 'javascript:sidebar(true, "sidebar");' class = 'openSidebar'>&#9776;</a>
+    <div class="banner">
+      <a href='javascript:sidebar(true, "sidebar");' class="openSidebar"
+        >&#9776;</a
+      >
       <h1>TAS-Online Editor</h1>
-      <a href = 'javascript:sidebar(true, "funcbar");' class = 'openFuncbar'>&#60;</a>
+      <a href='javascript:sidebar(true, "funcbar");' class="openFuncbar"
+        >&#60;</a
+      >
     </div>
 
-    <div class = 'main'>
-      <input type = 'file' id = 'file-dialog' accept = 'text/plain' onchange = 'readFile(event);'>
-      <button onclick = 'downloadBuffer();'>Save progress</button>
-      <button onclick = 'newFrame();'>Add Frame</button>
-      <button onclick = 'delFrame();'>Remove Frame</button>
+    <div class="main">
+      <input
+        type="file"
+        id="file-dialog"
+        accept="text/plain"
+        onchange="readFile(event);"
+      />
+      <button onclick="downloadBuffer();">Save progress</button>
+      <button onclick="newFrame();">Add Frame</button>
+      <button onclick="delFrame();">Remove Frame</button>
     </div>
 
-    <table id = 'apparatus'>
-      <tr id = 'header'></tr>
+    <table id="apparatus">
+      <tr id="header"></tr>
     </table>
 
-    <div class = 'funcbar'>
-      <a href = 'javascript:sidebar(false, "funcbar");' class = 'close'>
+    <div class="funcbar">
+      <a href='javascript:sidebar(false, "funcbar");' class="close">
         &times;
       </a>
-      <select name = 'Function ComboBox' id = 'funcbox'></select>
+      <select name="Function ComboBox" id="funcbox"></select>
       <div class="new-delete">
-        <button onclick = 'newBuffer();'>New script</button>
-        <button onclick = 'delBuffer();'>Delete script</button>
+        <button onclick="newBuffer();">New script</button>
+        <button onclick="delBuffer();">Delete script</button>
       </div>
-      <button onclick = 'importBuffer();'>Import script into current script</button>
+      <button onclick="importBuffer();">
+        Import script into current script
+      </button>
     </div>
   </body>
 </html>
