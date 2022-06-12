@@ -202,7 +202,7 @@ button:hover, td:hover {
   align-items: center;
   justify-content: center;
   touch-action: none;
-  transition: width 300ms;
+  transition: width 500ms;
 }
 
 #joystick {
@@ -217,7 +217,7 @@ button:hover, td:hover {
 
 .joystick-crosshair {
   background-color: var(--color-grey-dark);
-  display: none;
+  display: block;
   width: var(--joystick-size);
   height: 1vh;
   z-index: 2;

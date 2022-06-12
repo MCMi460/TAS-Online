@@ -20,6 +20,7 @@
   ];
   const YES = '✅';
   const NO = '⛔';
+  const radius = 32767;
   var defaultBuffer = '1 NONE 0;0 0;0';
   var bufferArray = ['1 KEY_B 0;0 0;0\n6 KEY_ZL 0;0 0;0\n41 KEY_ZL;KEY_Y 0;0 0;0\n43 KEY_X;KEY_A 30000;0 0;0\n44 KEY_A 30000;0 0;0\n45 KEY_A 30000;0 0;0\n46 KEY_A 30000;0 0;0\n47 KEY_A 30000;0 0;0',];
   var bufferTitles = ['Main Script',];
@@ -520,7 +521,6 @@
       clientY = e.touches[0].clientY;
     }
     let joystick = document.getElementById('joystick');
-    let radius = 32767;
     let x = (clientX - joystick.offsetLeft - joystick.offsetWidth / 2) * radius / (joystick.offsetWidth / 2);
     let y = ((clientY - joystick.offsetTop - joystick.offsetWidth / 2) * -1) * radius / (joystick.offsetWidth / 2);
     x = x.toFixed(0); y = y.toFixed(0);
@@ -539,14 +539,13 @@
   }
 
   function toPercentage(num) {
-    return ((+num + 32767) / (2 * 32767)) * 100;
+    return ((+num + radius) / (2 * radius)) * 100;
   }
 
   function inputUpdate(e = null) {
     let joystick = document.getElementById('joystick');
     let coords = document.getElementById('coords').children;
     let cursor = document.getElementById('joystick-cursor');
-    let radius = 32767;
     if (e) {
       switch (e.key) {
         case 'ArrowUp':
@@ -603,8 +602,6 @@
     }
     container.style.width = '100%';
     container.title = `${row}, ${col}`;
-    cursor.style.display = 'block';
-    crosshairs.forEach(crosshair => {crosshair.style.display = 'block';})
     let [x,y] = apparatus.children[row].children[col].innerHTML.split(',').map(Number);
     document.getElementById('x-coordinate').value = `${x}`;
     document.getElementById('y-coordinate').value = `${y}`;
@@ -613,8 +610,6 @@
 
   function closeJoystick() {
     document.querySelector('.joystick-container').style.width = '0%';
-    document.getElementById('joystick-cursor').style.display = 'none';
-    document.querySelectorAll('.joystick-crosshair').forEach(crosshair => {crosshair.style.display = 'none';})
 
     tableUpdate(0,0);
   }
