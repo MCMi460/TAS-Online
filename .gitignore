@@ -4,7 +4,3 @@ test*.*
 # Misc
 .DS_Store
 static/
-
-*.scss
-*.map
-assets/
