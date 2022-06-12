@@ -9,15 +9,15 @@
 
 body {
   margin: 0;
-  background-color: #242222;
+  background-color: hsl(0deg, 3%, 14%);
 }
 
 :root {
-  --color-button: #2b2e38;
-  --color-grey-dark: #18191c;
-  --color-joystick-background: #59504f;
-  --color-purple: #aa1bd1;
-  --color-blue: #1e90ff;
+  --color-button: hsl(226, 13%, 20%);
+  --color-grey-dark: hsl(225, 8%, 10%);
+  --color-joystick-background: hsl(6, 6%, 33%);
+  --color-main: hsl(200, 70%, 50%);
+  /*hsl(287, 77%, 46%);*/
   --joystick-size: 80vmin;
   --joystick-cursor-size: 2vmin;
   --banner-height: 7vh;
@@ -98,7 +98,7 @@ div.open {
   transition: color 300ms ease-in-out;
 }
 .sidebar > div > p > a:hover {
-  color: var(--color-blue);
+  color: hsl(210deg, 100%, 56%);
 }
 
 .version {
@@ -120,12 +120,12 @@ a.closeSidebar {
 }
 
 table, td, th {
-  border-spacing: 5px;
-  border: 2px solid;
-  border-color: var(--color-purple) var(--color-blue);
+  border-spacing: 0;
+  border: 1px solid var(--color-main);
 }
 
 table {
+  border-radius: 3px;
   font-size: 2vmin;
   overflow: hidden;
   table-layout: fixed;
@@ -147,7 +147,7 @@ button, input {
   font-size: 2vmin;
   overflow: hidden;
   text-align: center;
-  border: 2px solid var(--color-purple);
+  border: 2px solid var(--color-main);
   border-radius: 5px;
   min-height: -webkit-fit-content;
   min-height: -moz-fit-content;
@@ -156,6 +156,8 @@ button, input {
 
 button {
   padding: 0.3em;
+  cursor: pointer;
+  background-color: var(--color-button);
 }
 
 input {
@@ -164,12 +166,6 @@ input {
 
 #file-dialog {
   cursor: pointer;
-}
-
-button {
-  cursor: pointer;
-  color: white;
-  background-color: var(--color-button);
 }
 
 button:hover, td:hover {
@@ -208,6 +204,7 @@ button:hover, td:hover {
   align-items: center;
   justify-content: center;
   touch-action: none;
+  /* transition: width 300ms; */
 }
 
 #joystick {
@@ -238,8 +235,10 @@ button:hover, td:hover {
   width: var(--joystick-cursor-size);
   height: var(--joystick-cursor-size);
   border-radius: 50%;
-  background-color: var(--color-purple);
+  background-color: var(--color-main);
   position: fixed;
+  top: calc(50vh - 5vmin);
+  left: calc(50vw - 1vmin);
   z-index: 3;
 }
 
