@@ -204,7 +204,7 @@ button:hover, td:hover {
   align-items: center;
   justify-content: center;
   touch-action: none;
-  /* transition: width 300ms; */
+  transition: width 300ms;
 }
 
 #joystick {
@@ -214,6 +214,7 @@ button:hover, td:hover {
   border-radius: 50%;
   background-color: var(--color-joystick-background);
   opacity: 1;
+  position: relative;
 }
 
 .joystick-crosshair {
@@ -231,15 +232,16 @@ button:hover, td:hover {
 }
 
 #joystick-cursor {
-  display: none;
+  --cursor-error: -1vmin;
+  display: block;
+  position: absolute;
   width: var(--joystick-cursor-size);
   height: var(--joystick-cursor-size);
   border-radius: 50%;
   background-color: var(--color-main);
-  position: fixed;
-  top: calc(50vh - 5vmin);
-  left: calc(50vw - 1vmin);
   z-index: 3;
+  top: calc(50% + var(--cursor-error));
+  left: calc(50% + var(--cursor-error));
 }
 
 #coords input {

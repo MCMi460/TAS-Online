@@ -527,14 +527,19 @@
     if (!checkBounds(x,y,radius)) {
       return;
     }
-    // Set coords
     let coords = document.getElementById('coords').children;
     coords[0].value = `${x}`;
     coords[1].value = `${y}`;
-    // Move cursor
+    //convert x and y to percentages
+    x = toPercentage(x);
+    y = 100 - toPercentage(y);
     let cursor = document.getElementById('joystick-cursor');
-    cursor.style.left = `calc(${clientX}px - 1vmin)`;
-    cursor.style.top = `calc(${clientY}px - 1vmin)`;
+    cursor.style.left = `calc(${x}% + var(--cursor-error))`;
+    cursor.style.top = `calc(${y}% + var(--cursor-error))`;
+  }
+
+  function toPercentage(num) {
+    return ((+num + 32767) / (2 * 32767)) * 100;
   }
 
   function inputUpdate(e = null) {
@@ -568,8 +573,11 @@
       inputUpdate();
       return;
     }
-    cursor.style.left = `calc(${clientX}px - 1vmin)`;
-    cursor.style.top = `calc(${clientY}px - 1vmin)`;
+    x = toPercentage(x);
+    y = 100 - toPercentage(y);
+    cursor = document.getElementById('joystick-cursor');
+    cursor.style.left = `calc(${x}% + var(--cursor-error))`;
+    cursor.style.top = `calc(${y}% + var(--cursor-error))`;
   }
 
   function changeStick(row, col) {
