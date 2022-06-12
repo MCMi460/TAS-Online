@@ -1,6 +1,6 @@
 @font-face {
-  font-family: 'moon_get';
-  src: url('../assets/moon_get-Heavy.otf');
+  font-family: "moon_get";
+  src: url("../assets/moon_get-Heavy.otf");
 }
 
 * {
@@ -37,14 +37,14 @@ div.open {
   background-color: var(--color-grey-dark);
 
   > * {
-    font-family: 'moon_get', sans-serif; 
+    font-family: "moon_get", sans-serif;
   }
 
   h1 {
     letter-spacing: 0.05em;
     position: relative;
     font-size: calc(var(--banner-height) / 2.4);
-    
+
     &:after {
       content: "";
       position: absolute;
@@ -52,7 +52,12 @@ div.open {
       bottom: -0.3em;
       left: 0;
       height: 0.15em;
-      background: linear-gradient(90deg, rgba(255,0,0,1) 0%, rgba(79,176,85,1) 50%, rgba(51,0,255,1) 100%);
+      background: linear-gradient(
+        90deg,
+        rgba(255, 0, 0, 1) 0%,
+        rgba(79, 176, 85, 1) 50%,
+        rgba(51, 0, 255, 1) 100%
+      );
       border-radius: 0.075em;
     }
   }
@@ -119,7 +124,9 @@ div.open {
   margin: 1em auto;
 }
 
-table, td, th {
+table,
+td,
+th {
   border-spacing: 0;
   border: 1px solid var(--color-main);
 }
@@ -139,11 +146,13 @@ td {
   overflow: hidden;
 }
 
-button, td {
+button,
+td {
   transition: background-color 150ms ease-in-out;
 }
 
-button, input {
+button,
+input {
   font-size: 1vw;
   overflow: hidden;
   text-align: center;
@@ -166,7 +175,8 @@ input {
   cursor: pointer;
 }
 
-button:hover, td:hover {
+button:hover,
+td:hover {
   background-color: var(--color-grey-dark);
 }
 
@@ -311,7 +321,7 @@ a.close {
   position: absolute;
   background-color: var(--color-button);
   border-radius: 1em;
-  padding: .2em .8em;
+  padding: 0.2em 0.8em;
   z-index: 3;
   opacity: 0;
   transition: opacity 0.4s, visibility 0.4s;

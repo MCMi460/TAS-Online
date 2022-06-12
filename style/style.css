@@ -109,7 +109,9 @@ div.open {
   margin: 1em auto;
 }
 
-table, td, th {
+table,
+td,
+th {
   border-spacing: 0;
   border: 1px solid var(--color-main);
 }
@@ -129,11 +131,13 @@ td {
   overflow: hidden;
 }
 
-button, td {
+button,
+td {
   transition: background-color 150ms ease-in-out;
 }
 
-button, input {
+button,
+input {
   font-size: 1vw;
   overflow: hidden;
   text-align: center;
@@ -158,7 +162,8 @@ input {
   cursor: pointer;
 }
 
-button:hover, td:hover {
+button:hover,
+td:hover {
   background-color: var(--color-grey-dark);
 }
 
