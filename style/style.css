@@ -295,7 +295,7 @@ a.close {
   min-width: -webkit-max-content;
   min-width: -moz-max-content;
   min-width: max-content;
-  bottom: 150%;
+  bottom: 130%;
   left: 0;
   position: absolute;
   background-color: var(--color-button);
@@ -303,9 +303,11 @@ a.close {
   padding: 0.2em 0.8em;
   z-index: 3;
   opacity: 0;
-  transition: opacity 0.4s;
+  transition: opacity 0.4s, visibility 0.4s;
+  visibility: hidden;
 }
 
 .shareBtn:hover .shareTitle {
   opacity: 1;
+  visibility: visible;
 }/*# sourceMappingURL=style.css.map */

@@ -306,7 +306,7 @@ a.close {
 .shareTitle {
   text-align: center;
   min-width: max-content;
-  bottom: 150%;
+  bottom: 130%;
   left: 0;
   position: absolute;
   background-color: var(--color-button);
@@ -314,9 +314,11 @@ a.close {
   padding: .2em .8em;
   z-index: 3;
   opacity: 0;
-  transition: opacity 0.4s;
+  transition: opacity 0.4s, visibility 0.4s;
+  visibility: hidden;
 }
 
 .shareBtn:hover .shareTitle {
   opacity: 1;
+  visibility: visible;
 }
