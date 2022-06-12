@@ -70,13 +70,19 @@ div.open {
 .sidebar > div {
   margin-top: 5em;
 }
+.sidebar > div > p > a {
+  transition: color 300ms ease-in-out;
+}
+.sidebar > div > p > a:hover {
+  color: var(--color-blue);
+}
 
 .version {
   position: absolute;
   bottom: 3em;
 }
 
-#openSidebar {
+.openSidebar {
   position: absolute;
   top: -13px;
   left: 0;
@@ -85,7 +91,7 @@ div.open {
   text-decoration: none;
 }
 
-.sidebar #closeSidebar {
+a.closeSidebar {
   position: absolute;
   top: 0;
   right: 25px;
@@ -118,11 +124,14 @@ td {
   overflow: hidden;
 }
 
+button, td {
+  transition: background-color 150ms ease-in-out;
+}
+
 button, input {
   font-size: 2vmin;
   overflow: hidden;
   text-align: center;
-  padding: 0.3em;
   border: 2px solid var(--color-purple);
   border-radius: 5px;
   min-height: -webkit-fit-content;
@@ -130,14 +139,16 @@ button, input {
   min-height: fit-content;
 }
 
-#file-dialog {
-  cursor: pointer;
+button {
+  padding: 0.3em;
 }
 
 input {
-  font-size: 2vmin;
-  overflow: hidden;
-  text-align: center;
+  padding: 0.15em;
+}
+
+#file-dialog {
+  cursor: pointer;
 }
 
 button {
@@ -260,7 +271,7 @@ button:hover, td:hover {
   margin: 0 3px;
 }
 
-#openFuncbar {
+.openFuncbar {
   position: absolute;
   top: 0;
   right: 0;
@@ -269,7 +280,7 @@ button:hover, td:hover {
   text-decoration: none;
 }
 
-#closeFuncbar {
+.closeFuncbar {
   position: absolute;
   top: 0;
   left: 25px;
