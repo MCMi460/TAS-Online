@@ -696,3 +696,11 @@
       populateTable();
     }
   }
+
+  function share() {
+    navigator.clipboard.writeText(createQuery());
+    document.querySelector(`.shareTitle`).innerHTML = `Link saved to clipboard!`;
+    setTimeout(function(){
+      document.querySelector(`.shareTitle`).innerHTML = `Click to copy link`;
+    }, 5000); 
+  }

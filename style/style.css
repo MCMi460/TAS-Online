@@ -56,6 +56,7 @@ div.open {
   margin: 5px;
   font-size: var(--banner-height);
   text-decoration: none;
+  transition: color 500ms;
 }
 
 .openSidebar {
@@ -102,15 +103,6 @@ div.open {
 .version {
   position: absolute;
   bottom: 3em;
-}
-
-a.closeSidebar {
-  position: absolute;
-  top: 0;
-  right: 25px;
-  font-size: 36px;
-  margin-left: 50px;
-  text-decoration: none;
 }
 
 #apparatus {
@@ -168,13 +160,6 @@ input {
 
 button:hover, td:hover {
   background-color: var(--color-grey-dark);
-}
-
-.header, .key {
-  -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
 }
 
 .main {
@@ -268,14 +253,14 @@ button:hover, td:hover {
 }
 .funcbar select {
   padding: 1vmin;
-  padding-left: 3vmin;
   width: 80%;
   text-decoration: none;
   font-size: 1vw;
-  background-color: #282c2e;
+  background-color: var(--color-button);
   opacity: 1;
   border: 0;
   overflow: hidden;
+  border-radius: 5px;
 }
 .funcbar > div {
   margin: 3vmin 0 1vmin;
@@ -285,38 +270,42 @@ button:hover, td:hover {
   margin: 0 3px;
 }
 
-.closeFuncbar {
+a.close {
   position: absolute;
   top: 0;
-  left: 25px;
   font-size: 36px;
-  margin-right: 50px;
   text-decoration: none;
 }
 
-#shareBtn {
+.sidebar a.close {
+  right: 25px;
+}
+
+.funcbar a.close {
+  left: 25px;
+}
+
+.shareBtn {
   position: relative;
   display: inline-block;
 }
-#shareBtn #shareTitle {
+
+.shareTitle {
   text-align: center;
-  max-width: 25vw;
-  min-width: 10vw;
+  min-width: -webkit-max-content;
+  min-width: -moz-max-content;
+  min-width: max-content;
   bottom: 150%;
-  left: 50%;
+  left: 0;
   position: absolute;
-  visibility: hidden;
-  color: #fff;
-  background-color: #3e4547;
-  border-radius: 1.2vmin;
-  padding: 0.5vmin;
+  background-color: var(--color-button);
+  border-radius: 1em;
+  padding: 0.2em 0.8em;
   z-index: 3;
-  margin-left: -50%;
   opacity: 0;
   transition: opacity 0.4s;
 }
 
-#shareBtn:hover #shareTitle {
+.shareBtn:hover .shareTitle {
   opacity: 1;
-  visibility: visible;
 }/*# sourceMappingURL=style.css.map */

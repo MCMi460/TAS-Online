@@ -35,7 +35,7 @@
   </head>
   <body onload = 'setupUI();'>
     <div class = 'sidebar'>
-      <a href = 'javascript:sidebar(false, "sidebar");' class = 'closeSidebar'>
+      <a href = 'javascript:sidebar(false, "sidebar");' class = 'close'>
         &times;
       </a>
       <p id="script">
@@ -51,8 +51,8 @@
           <a href = 'https://github.com/MCMi460/TAS-Online' style = 'color:#49d16d' target = '_blank'>See on Github!</a>
         </p>
         <p>
-          <a href = '#' onclick = 'navigator.clipboard.writeText(createQuery()); document.getElementById(`shareTitle`).innerHTML = `Link saved to clipboard!`;' style = 'color:#2abdf7' id = 'shareBtn'>
-          <span id = 'shareTitle'>Click to copy link</span>
+          <a href = '#' onclick = 'share()' style = 'color:#2abdf7' class = 'shareBtn'>
+          <span class = 'shareTitle'>Click to copy link</span>
             Share Progress</a>
         </p>
         <p>
@@ -107,7 +107,7 @@
     </table>
 
     <div class = 'funcbar'>
-      <a href = 'javascript:sidebar(false, "funcbar");' class = 'closeFuncbar'>
+      <a href = 'javascript:sidebar(false, "funcbar");' class = 'close'>
         &times;
       </a>
       <select name = 'Function ComboBox' id = 'funcbox'></select>
