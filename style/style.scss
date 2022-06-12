@@ -1,0 +1,335 @@
+@font-face {
+  font-family: "moon_get";
+  src: url("../assets/moon_get-Heavy.otf");
+  font-display: swap;
+}
+
+* {
+  color: #ddd;
+  font-family: sans-serif;
+}
+
+body {
+  margin: 0;
+  background-color: hsl(0, 3%, 14%);
+}
+
+:root {
+  --color-button: hsl(226, 13%, 20%);
+  --color-grey-dark: hsl(225, 8%, 10%);
+  --color-joystick-background: hsl(6, 6%, 33%);
+  --color-main: hsl(200, 70%, 50%);
+
+  --joystick-size: 80vmin;
+  --joystick-cursor-size: 2vmin;
+  --banner-height: 7vh;
+
+  --sidebar-open: width 300ms;
+}
+
+div.open {
+  width: var(--sidebar-width);
+}
+
+.banner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: var(--color-grey-dark);
+
+  > * {
+    font-family: "moon_get", sans-serif;
+  }
+
+  h1 {
+    letter-spacing: 0.05em;
+    position: relative;
+    font-size: calc(var(--banner-height) / 2.4);
+
+    &:after {
+      content: "";
+      position: absolute;
+      width: 100%;
+      bottom: -0.3em;
+      left: 0;
+      height: 0.15em;
+      background: linear-gradient(
+        90deg,
+        rgba(255, 0, 0, 1) 0%,
+        rgba(79, 176, 85, 1) 50%,
+        rgba(51, 0, 255, 1) 100%
+      );
+      border-radius: 0.075em;
+    }
+  }
+
+  a {
+    position: absolute;
+    margin: 5px;
+    font-size: var(--banner-height);
+    text-decoration: none;
+    transition: color 500ms;
+  }
+}
+
+.openSidebar {
+  top: calc(-1 * var(--banner-height) / 3.5);
+  left: 0;
+}
+
+.openFuncbar {
+  top: calc(-1 * var(--banner-height) / 6);
+  right: 0;
+}
+
+.sidebar {
+  --sidebar-width: 25%;
+
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: #000;
+  overflow-x: hidden;
+  transition: var(--sidebar-open);
+  opacity: 0.9;
+  color: #fff;
+  padding-left: 3vmin;
+  text-decoration: none;
+  font-size: 0.75vw;
+  padding: 1em 0;
+
+  &.open {
+    padding-left: 2em;
+  }
+
+  > div {
+    margin-top: 5em;
+    > p > a {
+      transition: color 300ms ease-in-out;
+      &:hover {
+        color: hsl(210, 100%, 56%);
+      }
+    }
+  }
+}
+
+.version {
+  position: absolute;
+  bottom: 3em;
+}
+
+#apparatus {
+  margin: 1em auto;
+}
+
+table,
+td,
+th {
+  border-spacing: 0;
+  border: 1px solid var(--color-main);
+}
+
+table {
+  border-radius: 3px;
+  font-size: 1vw;
+  overflow: hidden;
+  table-layout: fixed;
+  text-align: center;
+  background-color: var(--color-button);
+  width: 98%;
+}
+
+td {
+  cursor: pointer;
+  overflow: hidden;
+}
+
+button,
+td {
+  transition: background-color 150ms ease-in-out;
+}
+
+button,
+input {
+  font-size: 1vw;
+  overflow: hidden;
+  text-align: center;
+  border: 2px solid var(--color-main);
+  border-radius: 5px;
+  min-height: fit-content;
+}
+
+button {
+  padding: 0.3em;
+  cursor: pointer;
+  background-color: var(--color-button);
+}
+
+input {
+  padding: 0.15em;
+}
+
+#file-dialog {
+  cursor: pointer;
+}
+
+button:hover,
+td:hover {
+  background-color: var(--color-grey-dark);
+}
+
+.main {
+  max-width: 40em;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-evenly;
+  font-size: 1.1vw;
+  margin: 2vmin auto;
+}
+
+.joystick-container {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 2;
+  top: 0;
+  right: 0;
+  background-color: #000;
+  overflow-x: hidden;
+  opacity: 0.9;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  touch-action: none;
+  transition: width 500ms;
+}
+
+#joystick {
+  width: var(--joystick-size);
+  height: var(--joystick-size);
+  border: 1vmin solid #c3c3c3;
+  border-radius: 50%;
+  background-color: var(--color-joystick-background);
+  opacity: 1;
+  position: relative;
+}
+
+.joystick-crosshair {
+  background-color: var(--color-grey-dark);
+  display: block;
+  width: var(--joystick-size);
+  height: 1vh;
+  z-index: 2;
+  position: relative;
+  top: calc((var(--joystick-size) / 2) - 0.5vmin);
+  left: calc(50% - var(--joystick-size) / 2);
+
+  &.y {
+    transform: rotate(90deg) translateX(-1vmin);
+  }
+}
+
+#joystick-cursor {
+  --cursor-error: calc(-0.5 * var(--joystick-cursor-size));
+
+  display: block;
+  position: absolute;
+  width: var(--joystick-cursor-size);
+  height: var(--joystick-cursor-size);
+  border-radius: 50%;
+  background-color: var(--color-main);
+  z-index: 3;
+  top: calc(50% + var(--cursor-error));
+  left: calc(50% + var(--cursor-error));
+}
+
+#coords input {
+  height: 1.5vmin;
+  margin-top: 1vmin;
+  margin-bottom: 1vmin;
+  color: #000;
+}
+
+.funcbar {
+  --sidebar-width: 40%;
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  right: 0;
+  background-color: #000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow-x: hidden;
+  transition: var(--sidebar-open);
+  opacity: 0.9;
+
+  select {
+    padding: 1vmin;
+    width: 80%;
+    text-decoration: none;
+    font-size: 1vw;
+    background-color: var(--color-button);
+    opacity: 1;
+    border: 0;
+    overflow: hidden;
+    border-radius: 5px;
+  }
+
+  > div {
+    margin: 3vmin 0 1vmin;
+    max-width: 500px;
+  }
+
+  button {
+    margin: 0 3px;
+  }
+}
+
+a.close {
+  position: absolute;
+  top: 0;
+  font-size: 36px;
+  text-decoration: none;
+}
+
+.sidebar a.close {
+  right: 25px;
+}
+
+.funcbar a.close {
+  left: 25px;
+}
+
+.shareBtn {
+  position: relative;
+  display: inline-block;
+}
+
+.shareTitle {
+  text-align: center;
+  min-width: max-content;
+  bottom: 130%;
+  left: 0;
+  position: absolute;
+  background-color: var(--color-button);
+  border-radius: 1em;
+  padding: 0.2em 0.8em;
+  z-index: 3;
+  opacity: 0;
+  transition: opacity 0.4s, visibility 0.4s;
+  visibility: hidden;
+}
+
+.shareBtn:hover .shareTitle {
+  opacity: 1;
+  visibility: visible;
+}
