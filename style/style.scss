@@ -134,7 +134,7 @@ th {
 
 table {
   border-radius: 3px;
-  font-size: 1.1vw;
+  font-size: 1vw;
   overflow: hidden;
   table-layout: fixed;
   text-align: center;
@@ -235,7 +235,7 @@ td:hover {
 }
 
 #joystick-cursor {
-  --cursor-error: -1vmin;
+  --cursor-error: calc(-0.5 * var(--joystick-cursor-size));
 
   display: block;
   position: absolute;

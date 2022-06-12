@@ -522,7 +522,7 @@ function changeKey(row, col) {
 
 function changeFrame(row, col) {
   let prompt = window.prompt(
-    "After which frame should this one be placed?",
+    "After which frame should this one be placed?", //wording could be better on this question
     "1"
   );
   if (prompt) {
@@ -594,6 +594,7 @@ function cursorMove(e) {
 
 function toPercentage(num) {
   return ((+num + radius) / (2 * radius)) * 100;
+  //take number (between -32767 and 32767), add 32767 to make it 0 -> 65534, then take that as a percentage of 65534
 }
 
 function inputUpdate(e = null) {
@@ -634,6 +635,7 @@ function inputUpdate(e = null) {
   }
   x = toPercentage(x);
   y = 100 - toPercentage(y);
+  //convert x and y to a percentage of how far left / right or up / down they are on the joystick circle
   cursor = document.getElementById("joystick-cursor");
   cursor.style.left = `calc(${x}% + var(--cursor-error))`;
   cursor.style.top = `calc(${y}% + var(--cursor-error))`;
