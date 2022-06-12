@@ -17,7 +17,6 @@ body {
   --color-grey-dark: hsl(225, 8%, 10%);
   --color-joystick-background: hsl(6, 6%, 33%);
   --color-main: hsl(200, 70%, 50%);
-  /*hsl(287, 77%, 46%);*/
   --joystick-size: 80vmin;
   --joystick-cursor-size: 2vmin;
   --banner-height: 7vh;
@@ -32,7 +31,6 @@ div.open {
   display: flex;
   flex-direction: column;
   align-items: center;
-  font-size: calc(10px + 1vmin);
   background-color: var(--color-grey-dark);
 }
 .banner > * {
@@ -85,7 +83,7 @@ div.open {
   color: #fff;
   padding-left: 3vmin;
   text-decoration: none;
-  font-size: 1.5vmin;
+  font-size: 0.75vw;
   padding: 1em 0;
 }
 .sidebar.open {
@@ -116,7 +114,7 @@ a.closeSidebar {
 }
 
 #apparatus {
-  margin: 2vmin auto;
+  margin: 1em auto;
 }
 
 table, td, th {
@@ -126,7 +124,7 @@ table, td, th {
 
 table {
   border-radius: 3px;
-  font-size: 2vmin;
+  font-size: 1.1vw;
   overflow: hidden;
   table-layout: fixed;
   text-align: center;
@@ -144,7 +142,7 @@ button, td {
 }
 
 button, input {
-  font-size: 2vmin;
+  font-size: 1vw;
   overflow: hidden;
   text-align: center;
   border: 2px solid var(--color-main);
@@ -185,7 +183,7 @@ button:hover, td:hover {
   flex-direction: row;
   align-items: center;
   justify-content: space-evenly;
-  font-size: calc(10px + 1vmin);
+  font-size: 1.1vw;
   margin: 2vmin auto;
 }
 
@@ -273,7 +271,7 @@ button:hover, td:hover {
   padding-left: 3vmin;
   width: 80%;
   text-decoration: none;
-  font-size: 2vmin;
+  font-size: 1vw;
   background-color: #282c2e;
   opacity: 1;
   border: 0;
