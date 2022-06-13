@@ -126,11 +126,7 @@ table {
   background-color: var(--color-button);
 }
 
-td.key {
-  width: 75px;
-}
-
-td.frame {
+td {
   width: 65px;
 }
 

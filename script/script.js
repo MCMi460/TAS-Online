@@ -321,14 +321,24 @@ function loadHeader() {
   columns.shift();
   columns.unshift("Frame", "L-Stick", "R-Stick");
   for (let i = 0; i < columns.length; i++) {
-    let td = document.createElement("th");
+    let th = document.createElement("th");
     let text = columns[i];
     if (i > 2) {
       text = text.substring(4);
     }
-    td.innerHTML = text;
-    td.title = text;
-    header.appendChild(td);
+    if (i > 10) {
+      text = text.toLowerCase();
+      let firstLetter = text.charAt(0).toUpperCase();
+      if (i < 13) {
+        text = firstLetter + text.substring(1);
+      } else {
+        let secondLetter = text.charAt(1).toUpperCase();
+        text = firstLetter + secondLetter + text.substring(2);
+      }
+    }
+    th.innerHTML = text;
+    th.title = text;
+    header.appendChild(th);
   }
 }
 
