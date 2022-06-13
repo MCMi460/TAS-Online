@@ -85,7 +85,7 @@ div.open {
   color: #fff;
   padding-left: 3vmin;
   text-decoration: none;
-  font-size: 0.75vw;
+  font-size: clamp(0.45em, 0.75vw, 1.2em);
   padding: 1em 0;
 }
 .sidebar.open {
@@ -119,7 +119,7 @@ th {
 
 table {
   border-radius: 3px;
-  font-size: 1vw;
+  font-size: clamp(0.5em, 1vw, 1.2em);
   overflow: hidden;
   table-layout: fixed;
   text-align: center;
@@ -127,12 +127,12 @@ table {
 }
 
 td {
-  width: 65px;
+  width: 3.5em;
 }
 
 td.lstick,
 td.rstick {
-  width: 120px;
+  width: 6em;
 }
 
 td {
@@ -147,7 +147,7 @@ td {
 
 button,
 input {
-  font-size: 1vw;
+  font-size: clamp(0.5em, 1vw, 1.2em);
   overflow: hidden;
   text-align: center;
   border: 2px solid var(--color-main);
@@ -183,7 +183,7 @@ td:hover {
   align-items: center;
   justify-content: space-evenly;
   font-size: 1.1vw;
-  margin: 2vmin auto;
+  margin: 1vw auto;
 }
 
 .joystick-container {
