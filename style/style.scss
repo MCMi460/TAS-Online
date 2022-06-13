@@ -129,7 +129,7 @@ table,
 td,
 th {
   border-spacing: 0;
-  border: 1px solid var(--color-main);
+  border: 0.5px solid var(--color-main);
 }
 
 table {
@@ -139,7 +139,19 @@ table {
   table-layout: fixed;
   text-align: center;
   background-color: var(--color-button);
-  width: 98%;
+}
+
+td.key {
+  width: 75px;
+}
+
+td.frame {
+  width: 65px;
+}
+
+td.lstick,
+td.rstick {
+  width: 120px;
 }
 
 td {
