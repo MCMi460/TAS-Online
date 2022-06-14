@@ -19,7 +19,7 @@ body {
   --color-joystick-background: hsl(6, 6%, 33%);
   --color-main: hsl(200, 70%, 50%);
   --joystick-size: 80vmin;
-  --joystick-cursor-size: 2vmin;
+  --joystick-cursor-size: clamp(3em, 2vmin, 5em);
   --banner-height: 7vh;
   --sidebar-open: width 300ms;
 }
@@ -28,6 +28,17 @@ div.open {
   width: var(--sidebar-width);
 }
 
+.error {
+  color: red;
+  padding-left: 1em;
+  display: block;
+}
+
+@media screen and (min-width: 500px) {
+  .error {
+    display: none;
+  }
+}
 .banner {
   display: flex;
   flex-direction: column;
@@ -106,10 +117,6 @@ div.open {
   bottom: 3em;
 }
 
-#apparatus {
-  margin: 1em auto;
-}
-
 table,
 td,
 th {
@@ -124,6 +131,8 @@ table {
   table-layout: fixed;
   text-align: center;
   background-color: var(--color-button);
+  margin: 1em auto;
+  width: clamp(500px, 95vw, 1500px);
 }
 
 td {
@@ -147,7 +156,7 @@ td {
 
 button,
 input {
-  font-size: clamp(0.5em, 1vw, 1.2em);
+  font-size: clamp(0.7rem, 1vw, 1rem);
   overflow: hidden;
   text-align: center;
   border: 2px solid var(--color-main);
@@ -177,12 +186,12 @@ td:hover {
 }
 
 .main {
+  font-size: clamp(0.8rem, 1.1vw, 1.1rem);
   max-width: 40em;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-evenly;
-  font-size: 1.1vw;
   margin: 1vw auto;
 }
 
