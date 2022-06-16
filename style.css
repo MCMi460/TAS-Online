@@ -132,7 +132,8 @@ table {
   text-align: center;
   background-color: var(--color-button);
   margin: 1em auto;
-  width: clamp(500px, calc(100vw - 3em), 1600px);
+  min-width: 500px;
+  max-width: 1600px;
 }
 
 td {
