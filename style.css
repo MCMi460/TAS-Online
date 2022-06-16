@@ -19,7 +19,7 @@ body {
   --color-joystick-background: hsl(6, 6%, 33%);
   --color-main: hsl(200, 70%, 50%);
   --joystick-size: 80vmin;
-  --joystick-cursor-size: clamp(3em, 2vmin, 5em);
+  --joystick-cursor-size: clamp(1em, 2vmin, 3em);
   --banner-height: 7vh;
   --sidebar-open: width 300ms;
 }
@@ -125,23 +125,22 @@ th {
 }
 
 table {
-  border-radius: 5px;
+  border-radius: 3px;
   font-size: clamp(0.5em, 1vw, 1.2em);
   overflow: hidden;
   table-layout: fixed;
   text-align: center;
   background-color: var(--color-button);
   margin: 1em auto;
-  width: clamp(500px, 95vw, 1500px);
 }
 
 td {
-  width: 3.5em;
+  min-width: 3.5em;
 }
 
 td.lstick,
 td.rstick {
-  width: 6em;
+  min-width: 6em;
 }
 
 td {
@@ -333,4 +332,4 @@ a.close {
 .shareBtn:hover .shareTitle {
   opacity: 1;
   visibility: visible;
-}/*# sourceMappingURL=style.css.map */
+}
