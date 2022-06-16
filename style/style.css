@@ -125,7 +125,7 @@ th {
 }
 
 table {
-  border-radius: 3px;
+  border-radius: 5px;
   font-size: clamp(0.5em, 1vw, 1.2em);
   overflow: hidden;
   table-layout: fixed;
