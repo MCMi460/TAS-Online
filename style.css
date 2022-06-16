@@ -132,15 +132,16 @@ table {
   text-align: center;
   background-color: var(--color-button);
   margin: 1em auto;
+  width: clamp(500px, calc(100vw - 3em), 1600px);
 }
 
 td {
-  min-width: 3.5em;
+  width: 5.1%;
 }
 
 td.lstick,
 td.rstick {
-  min-width: 6em;
+  width: 6em;
 }
 
 td {
